@@ -21,10 +21,15 @@
         <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" type="image/x-icon" />
         <link rel="icon" href="{{ url('/favicon.ico') }}" type="image/x-icon" />
         @vite('resources/sass/pages/_auth.scss')
+        <style>
+            html{
+                height: 100%;
+            }
+        </style>
     </head>
     <body>
         <main>
-            <section class="auth-form">
+            <section class="auth-form new-password">
                 <form
                     class="auth-form__form"
                     method="POST"
@@ -52,7 +57,7 @@
                         </ul>
                     @endif
 
-                    <p class="auth-form__text-input-group">
+                    <p class="auth-form__text-input-group auth-form__group">
                         <label class="auth-form__label" for="email">
                             {{ __('auth.email') }}
                         </label>
@@ -66,7 +71,7 @@
                             value="{{ old('email') }}"
                         />
                     </p>
-                    <p class="auth-form__text-input-group">
+                    <p class="auth-form__text-input-group auth-form__group">
                         <label class="auth-form__label" for="password">
                             {{ __('auth.new-password') }}
                         </label>
@@ -80,7 +85,7 @@
                             value="{{ old('password') }}"
                         />
                     </p>
-                    <p class="auth-form__text-input-group">
+                    <p class="auth-form__text-input-group auth-form__group">
                         <label class="auth-form__label" for="password_confirmation">
                             {{ __('auth.confirm-new-password') }}
                         </label>
@@ -98,9 +103,11 @@
                         @hiddencaptcha
                     @endif
 
-                    <button class="auth-form__primary-button">
-                        {{ __('auth.password-reset') }}
-                    </button>
+                    <div class="auth-form__button">
+                        <button class="auth-form__primary-button">
+                            {{ __('auth.password-reset') }}
+                        </button>
+                    </div>
                     @if (Session::has('errors'))
                         <ul class="auth-form__errors">
                             @foreach ($errors->all() as $error)

@@ -50,6 +50,10 @@
     column-gap: 5px;
     align-items: center;
     font-size: 3rem;
+    min-width: 160px;
+    @media screen and (max-width: 767px) {
+        min-width: 140px;
+    }
 }
 
 .top-nav__site-logo {

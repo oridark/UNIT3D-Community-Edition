@@ -122,15 +122,15 @@
                                 class="form__select"
                                 placeholder=" "
                             >
-                                <option value="1" selected>Bytes</option>
+                                <!-- <option value="1" selected>Bytes</option> -->
                                 <option value="1000">KB</option>
-                                <option value="1024">KiB</option>
+                                <!-- <option value="1024">KiB</option> -->
                                 <option value="1000000">MB</option>
-                                <option value="1048576">MiB</option>
+                                <!-- <option value="1048576">MiB</option> -->
                                 <option value="1000000000">GB</option>
-                                <option value="1073741824">GiB</option>
+                                <!-- <option value="1073741824">GiB</option> -->
                                 <option value="1000000000000">TB</option>
-                                <option value="1099511627776">TiB</option>
+                                <!-- <option value="1099511627776">TiB</option> -->
                             </select>
                             <label
                                 class="form__label form__label--floating"
@@ -161,15 +161,15 @@
                                 class="form__select"
                                 placeholder=" "
                             >
-                                <option value="1" selected>Bytes</option>
+                                <!-- <option value="1" selected>Bytes</option> -->
                                 <option value="1000">KB</option>
-                                <option value="1024">KiB</option>
+                                <!-- <option value="1024">KiB</option> -->
                                 <option value="1000000">MB</option>
-                                <option value="1048576">MiB</option>
+                                <!-- <option value="1048576">MiB</option> -->
                                 <option value="1000000000">GB</option>
-                                <option value="1073741824">GiB</option>
+                                <!-- <option value="1073741824">GiB</option> -->
                                 <option value="1000000000000">TB</option>
-                                <option value="1099511627776">TiB</option>
+                                <!-- <option value="1099511627776">TiB</option> -->
                             </select>
                             <label
                                 class="form__label form__label--floating"

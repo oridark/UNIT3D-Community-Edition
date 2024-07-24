@@ -187,6 +187,7 @@ return [
     'send'                 => 'Send',
     'select'               => 'Select',
     'similar'              => 'Similar',
+    'site-title'           => 'M&C',
     'something-went-wrong' => 'Something Went Wrong!',
     'sort'                 => 'Sort',
     'special'              => 'Special',

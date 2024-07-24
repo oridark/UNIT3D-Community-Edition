@@ -2,9 +2,9 @@
     <div class="top-nav__left">
         <a class="top-nav__branding" href="{{ route('home.index') }}">
             <i class="fal fa-tv-retro"></i>
-            <span class="top-nav__site-logo">{{ \config('other.title') }}</span>
+            <span class="top-nav__site-logo">{{ __('common.site-title') }}</span>
         </a>
-        <livewire:quick-search-dropdown />
+        <!-- <livewire:quick-search-dropdown /> -->
     </div>
     <ul class="top-nav__main-menus" x-bind:class="expanded && 'mobile'">
         <li class="top-nav--left__list-item top-nav__dropdown">

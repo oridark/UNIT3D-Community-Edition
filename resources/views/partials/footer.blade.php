@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="footer__wrapper">
-        <section class="footer__section">
+        <!-- <section class="footer__section">
             <h2 class="footer__section-title">
                 <b>{{ config('other.title') }}</b>
             </h2>
@@ -9,7 +9,7 @@
                 class="{{ config('other.font-awesome') }} fa-tv-retro footer__icon"
                 style="font-size: 90px"
             ></i>
-        </section>
+        </section> -->
         <section class="footer__section">
             <h2 class="footer__section-title">{{ __('common.account') }}</h2>
             <ul class="footer__section-list">
@@ -74,16 +74,16 @@
                 <li>
                     <a href="{{ route('about') }}">{{ __('common.about') }}</a>
                 </li>
-                <li>
+                <!-- <li>
                     <a
                         href="https://github.com/HDInnovations/UNIT3D-Community-Edition/wiki/Torrent-API-(UNIT3D-v8.x.x)"
                     >
                         API Documentation
                     </a>
-                </li>
+                </li> -->
             </ul>
         </section>
-        <section class="footer__section">
+        <!-- <section class="footer__section">
             <h2 class="footer__section-title">{{ __('common.other') }}</h2>
             <ul class="footer__section-list">
                 <li>
@@ -105,7 +105,7 @@
                     </a>
                 </li>
             </ul>
-        </section>
+        </section> -->
     </div>
     <p class="footer__stats">
         This page took
