@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -33,18 +30,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Audit extends Model
 {
-    /** @use HasFactory<\Database\Factories\AuditFactory> */
     use HasFactory;
 
     /**
-     * @var string[]
-     */
-    public array $values = [];
-
-    /**
-     * The attributes that are mass assignable.
+     * The Attributes That Are Mass Assignable.
      *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $fillable = [
         'user_id', 'model_name', 'model_entry_id', 'action', 'record',
@@ -53,7 +44,7 @@ class Audit extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

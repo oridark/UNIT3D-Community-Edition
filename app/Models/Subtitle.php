@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -46,8 +43,6 @@ use Illuminate\Database\Eloquent\Model;
 class Subtitle extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\SubtitleFactory> */
     use HasFactory;
 
     final public const APPROVED = 1;
@@ -57,7 +52,7 @@ class Subtitle extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{moderated_at: 'datetime'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -74,7 +69,7 @@ class Subtitle extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -87,7 +82,7 @@ class Subtitle extends Model
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -97,7 +92,7 @@ class Subtitle extends Model
     /**
      * Belongs To A Media Language.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<MediaLanguage, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<MediaLanguage, self>
      */
     public function language(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

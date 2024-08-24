@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -33,14 +30,11 @@ use Illuminate\Database\Eloquent\Model;
 class Option extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\OptionFactory> */
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
+    /** The Attributes That Are Mass Assignable.
      *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $fillable = [
         'name',
@@ -49,7 +43,7 @@ class Option extends Model
     /**
      * Belongs To A Poll.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Poll, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Poll, self>
      */
     public function poll(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

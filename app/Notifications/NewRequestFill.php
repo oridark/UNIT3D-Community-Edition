@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -54,7 +51,7 @@ class NewRequestFill extends Notification implements ShouldQueue
         return [
             'title' => ($this->torrentRequest->filled_anon ? 'Anonymous' : $this->torrentRequest->filler->username).' Has Filled One Of Your Torrent Requests',
             'body'  => ($this->torrentRequest->filled_anon ? 'Anonymous' : $this->torrentRequest->filler->username).' has filled one of your Requested Torrents '.$this->torrentRequest->name,
-            'url'   => \sprintf('/requests/%s', $this->torrentRequest->id),
+            'url'   => sprintf('/requests/%s', $this->torrentRequest->id),
         ];
     }
 }

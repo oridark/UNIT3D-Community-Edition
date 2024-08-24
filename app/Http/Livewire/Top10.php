@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -19,13 +16,11 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\Torrent;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
-use Throwable;
 
 /**
  * @property \Illuminate\Database\Eloquent\Collection<int, Torrent> $works
@@ -40,34 +35,8 @@ class Top10 extends Component
     public string $metaType = 'movie_meta';
 
     #[Url(history: true)]
-    #[Validate('in:day,week,month,year,all,custom')]
+    #[Validate('in:day,week,month,year,all')]
     public string $interval = 'day';
-
-    #[Url(history: true)]
-    #[Validate('sometimes|date_format:Y-m-d')]
-    public string $from = '';
-
-    #[Url(history: true)]
-    #[Validate('sometimes|date_format:Y-m-d')]
-    public string $until = '';
-
-    public function updatingFrom(string &$value): void
-    {
-        try {
-            $value = Carbon::parse($value)->format('Y-m-d');
-        } catch (Throwable) {
-            $value = now()->subDay()->format('Y-m-d');
-        }
-    }
-
-    public function updatingUntil(string &$value): void
-    {
-        try {
-            $value = Carbon::parse($value)->format('Y-m-d');
-        } catch (Throwable) {
-            $value = now()->format('Y-m-d');
-        }
-    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Collection<int, Torrent>
@@ -78,7 +47,7 @@ class Top10 extends Component
         $this->validate();
 
         return cache()->remember(
-            'top10-'.$this->interval.'-'.($this->from ?? '').'-'.($this->until ?? '').'-'.$this->metaType,
+            'top10-'.$this->interval.'-'.$this->metaType,
             3600,
             fn () => Torrent::query()
                 ->when(
@@ -98,7 +67,6 @@ class Top10 extends Component
                 ->when($this->interval === 'month', fn ($query) => $query->whereBetween('history.completed_at', [now()->subMonth(), now()]))
                 ->when($this->interval === 'year', fn ($query) => $query->whereBetween('history.completed_at', [now()->subYear(), now()]))
                 ->when($this->interval === 'all', fn ($query) => $query->whereNotNull('history.completed_at'))
-                ->when($this->interval === 'custom', fn ($query) => $query->whereBetween('history.completed_at', [$this->from ?: now(), $this->until ?: now()]))
                 ->whereIn('torrents.category_id', Category::select('id')->where($this->metaType, '=', true))
                 // Small torrents screw the stats since users download them only to farm bon.
                 ->where('torrents.size', '>', 1024 * 1024 * 1024)
@@ -118,24 +86,14 @@ class Top10 extends Component
         $metaTypes = [];
 
         if (Category::where('movie_meta', '=', true)->exists()) {
-            $metaTypes[(string) __('mediahub.movie')] = 'movie_meta';
+            $metaTypes[__('mediahub.movie')] = 'movie_meta';
         }
 
         if (Category::where('tv_meta', '=', true)->exists()) {
-            $metaTypes[(string) __('mediahub.show')] = 'tv_meta';
+            $metaTypes[__('mediahub.show')] = 'tv_meta';
         }
 
         return $metaTypes;
-    }
-
-    final public function placeholder(): string
-    {
-        return <<<'HTML'
-        <section class="panelV2">
-            <h2 class="panel__heading">Top Titles</h2>
-            <div class="panel__body">Loading...</div>
-        </section>
-        HTML;
     }
 
     final public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application

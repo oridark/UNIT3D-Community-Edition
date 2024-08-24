@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -23,26 +20,26 @@ use DateTimeInterface;
 /**
  * App\Models\History.
  *
- * @property int                             $user_id
- * @property int                             $torrent_id
- * @property string                          $agent
- * @property int                             $uploaded
- * @property int                             $actual_uploaded
- * @property int                             $client_uploaded
- * @property int                             $downloaded
- * @property int                             $refunded_download
- * @property int                             $actual_downloaded
- * @property int                             $client_downloaded
- * @property int                             $seeder
- * @property int                             $active
- * @property int                             $seedtime
- * @property int                             $immune
- * @property bool                            $hitrun
- * @property \Illuminate\Support\Carbon|null $prewarned_at
+ * @property int    $id
+ * @property int    $user_id
+ * @property int    $torrent_id
+ * @property string $agent
+ * @property int    $uploaded
+ * @property int    $actual_uploaded
+ * @property int    $client_uploaded
+ * @property int    $downloaded
+ * @property int    $refunded_download
+ * @property int    $actual_downloaded
+ * @property int    $client_downloaded
+ * @property int    $seeder
+ * @property int    $active
+ * @property int    $seedtime
+ * @property int    $immune
+ * @property bool   $hitrun
+ * @property bool   $prewarn
  */
 class History extends Model
 {
-    /** @use HasFactory<\Database\Factories\HistoryFactory> */
     use HasFactory;
 
     /**
@@ -62,21 +59,21 @@ class History extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{completed_at: 'datetime', hitrun: 'bool', prewarned_at: 'datetime'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'completed_at' => 'datetime',
-            'hitrun'       => 'bool',
-            'prewarned_at' => 'datetime',
+            'hitrun'       => 'boolean',
+            'prewarn'      => 'boolean',
         ];
     }
 
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -89,7 +86,7 @@ class History extends Model
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

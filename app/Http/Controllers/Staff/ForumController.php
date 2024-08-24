@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -22,6 +19,7 @@ use App\Http\Requests\Staff\UpdateForumRequest;
 use App\Models\Forum;
 use App\Models\ForumCategory;
 use App\Models\Group;
+use App\Models\ForumPermission;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -49,7 +47,10 @@ class ForumController extends Controller
     {
         $forum = Forum::create($request->validated('forum'));
 
-        $forum->permissions()->upsert($request->validated('permissions'), ['forum_id', 'group_id']);
+        ForumPermission::upsert(
+            array_map(fn ($item) => ['forum_id' => $forum->id] + $item, $request->validated('permissions')),
+            ['forum_id', 'group_id']
+        );
 
         return to_route('staff.forum_categories.index')
             ->withSuccess('Forum has been created successfully');
@@ -74,7 +75,10 @@ class ForumController extends Controller
     {
         $forum->update($request->validated('forum'));
 
-        $forum->permissions()->upsert($request->validated('permissions'), ['forum_id', 'group_id']);
+        ForumPermission::upsert(
+            array_map(fn ($item) => ['forum_id' => $forum->id] + $item, $request->validated('permissions')),
+            ['forum_id', 'group_id']
+        );
 
         return to_route('staff.forum_categories.index')
             ->withSuccess('Forum has been edited successfully');

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -48,7 +45,7 @@ class UpdateTorrentRequest extends FormRequest
         return [
             'name' => [
                 'required',
-                Rule::unique('torrents')->whereNot('id', $torrentId)->whereNull('deleted_at'),
+                Rule::unique('torrents')->whereNot('id', $torrentId),
                 'max:255',
             ],
             'description' => [
@@ -88,40 +85,33 @@ class UpdateTorrentRequest extends FormRequest
             ],
             'imdb' => [
                 'required',
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'tvdb' => [
                 'required',
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'tmdb' => [
                 'required',
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'mal' => [
                 'required',
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'igdb' => [
                 'required',
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'season_number' => [
                 Rule::when($category->tv_meta, 'required'),
                 Rule::when(!$category->tv_meta, 'nullable'),
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'episode_number' => [
                 Rule::when($category->tv_meta, 'required'),
                 Rule::when(!$category->tv_meta, 'nullable'),
-                'decimal:0',
-                'min:0',
+                'numeric',
             ],
             'anon' => [
                 'required',

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -30,7 +27,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int                             $warned_by
  * @property int|null                        $torrent
  * @property string                          $reason
- * @property \Illuminate\Support\Carbon|null $expires_on
+ * @property string|null                     $expires_on
  * @property bool                            $active
  * @property int|null                        $deleted_by
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -40,8 +37,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Warning extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\WarningFactory> */
     use HasFactory;
     use SoftDeletes;
 
@@ -50,20 +45,19 @@ class Warning extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{expires_on: 'datetime', active: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'expires_on' => 'datetime',
-            'active'     => 'bool',
+            'active' => 'boolean',
         ];
     }
 
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrenttitle(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -73,7 +67,7 @@ class Warning extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function warneduser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -86,7 +80,7 @@ class Warning extends Model
     /**
      * Belongs To A USer.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function staffuser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -99,7 +93,7 @@ class Warning extends Model
     /**
      * Belongs To A USer.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function deletedBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

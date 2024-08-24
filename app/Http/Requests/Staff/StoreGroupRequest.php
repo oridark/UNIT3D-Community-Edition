@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -67,10 +64,6 @@ class StoreGroupRequest extends FormRequest
             'effect' => [
                 'sometimes',
             ],
-            'is_uploader' => [
-                'required',
-                'boolean',
-            ],
             'is_internal' => [
                 'required',
                 'boolean',
@@ -111,22 +104,6 @@ class StoreGroupRequest extends FormRequest
                 'required',
                 'boolean',
             ],
-            'can_chat' => [
-                'required',
-                'boolean',
-            ],
-            'can_comment' => [
-                'required',
-                'boolean',
-            ],
-            'can_invite' => [
-                'required',
-                'boolean',
-            ],
-            'can_request' => [
-                'required',
-                'boolean',
-            ],
             'can_upload' => [
                 'required',
                 'boolean',
@@ -164,13 +141,6 @@ class StoreGroupRequest extends FormRequest
                 ], 'prohibited'),
             ],
             'min_seedsize' => [
-                Rule::when($request->boolean('autogroup'), [
-                    'sometimes',
-                    'integer',
-                    'min:0',
-                ], 'prohibited'),
-            ],
-            'min_uploads' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'integer',

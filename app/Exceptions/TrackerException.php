@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -86,7 +83,7 @@ class TrackerException extends Exception
 
         if ($replace) {
             foreach ($replace as $key => $value) {
-                $message = str_replace($key, (string) $value, $message);
+                $message = str_replace($key, $value, $message);
             }
         }
 

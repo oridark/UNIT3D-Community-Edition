@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -17,9 +14,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Ticket;
-use Exception;
 use Illuminate\Console\Command;
-use Throwable;
 
 class CheckForStaleTickets extends Command
 {
@@ -39,10 +34,8 @@ class CheckForStaleTickets extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
      */
-    final public function handle(): void
+    public function handle(): void
     {
         Ticket::checkForStaleTickets();
     }

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,7 +13,6 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Conversation;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\PrivateMessage;
@@ -35,11 +31,12 @@ class PrivateMessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'sender_id'       => User::factory(),
-            'conversation_id' => Conversation::factory(),
-            'message'         => $this->faker->text(),
-            'created_at'      => $this->faker->optional()->dateTime(),
-            'updated_at'      => $this->faker->optional()->dateTime(),
+            'sender_id'   => User::factory(),
+            'receiver_id' => User::factory(),
+            'subject'     => $this->faker->word(),
+            'message'     => $this->faker->text(),
+            'read'        => $this->faker->boolean(),
+            'related_to'  => $this->faker->randomNumber(),
         ];
     }
 }

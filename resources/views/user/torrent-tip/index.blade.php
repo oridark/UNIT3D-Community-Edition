@@ -97,14 +97,10 @@
     <section class="panelV2">
         <h2 class="panel__heading">{{ __('bon.total-tips') }}</h2>
         <dl class="key-value">
-            <div class="key-value__group">
-                <dt>{{ __('bon.you-have-received-tips') }}</dt>
-                <dd>{{ $receivedTips }}</dd>
-            </div>
-            <div class="key-value__group">
-                <dt>{{ __('bon.you-have-sent-tips') }}</dt>
-                <dd>{{ $sentTips }}</dd>
-            </div>
+            <dt>{{ __('bon.you-have-received-tips') }}</dt>
+            <dd>{{ $receivedTips }}</dd>
+            <dt>{{ __('bon.you-have-sent-tips') }}</dt>
+            <dd>{{ $sentTips }}</dd>
         </dl>
     </section>
 @endsection

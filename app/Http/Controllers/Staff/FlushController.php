@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -24,7 +21,6 @@ use App\Models\Peer;
 use App\Repositories\ChatRepository;
 use Illuminate\Support\Carbon;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @see \Tests\Todo\Feature\Http\Controllers\Staff\FlushControllerTest
@@ -46,22 +42,18 @@ class FlushController extends Controller
     public function peers(): \Illuminate\Http\RedirectResponse
     {
         $carbon = new Carbon();
-        $peers = Peer::select(['torrent_id', 'user_id', 'peer_id', 'updated_at'])->where('updated_at', '<', $carbon->copy()->subHours(2)->toDateTimeString())->get();
+        $peers = Peer::select(['id', 'torrent_id', 'user_id', 'updated_at'])->where('updated_at', '<', $carbon->copy()->subHours(2)->toDateTimeString())->get();
 
         foreach ($peers as $peer) {
-            History::query()
-                ->where('torrent_id', '=', $peer->torrent_id)
-                ->where('user_id', '=', $peer->user_id)
-                ->update([
-                    'active'     => false,
-                    'updated_at' => DB::raw('updated_at'),
-                ]);
+            $history = History::where('torrent_id', '=', $peer->torrent_id)->where('user_id', '=', $peer->user_id)->first();
 
-            Peer::query()
-                ->where('torrent_id', '=', $peer->torrent_id)
-                ->where('user_id', '=', $peer->user_id)
-                ->where('peer_id', '=', $peer->peer_id)
-                ->delete();
+            if ($history) {
+                $history->active = false;
+                $history->timestamps = false;
+                $history->save();
+            }
+
+            $peer->delete();
         }
 
         return to_route('staff.dashboard.index')

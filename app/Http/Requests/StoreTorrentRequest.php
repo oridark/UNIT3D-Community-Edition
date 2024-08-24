@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -40,7 +37,7 @@ class StoreTorrentRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<Closure(string, mixed, Closure(string): never): void|\Illuminate\Validation\Rules\ProhibitedIf|\Illuminate\Validation\ConditionalRules|\Illuminate\Validation\Rules\Unique|string>>
+     * @return array<string, array<Closure|\Illuminate\Validation\ConditionalRules|string>|string>
      */
     public function rules(Request $request): array
     {
@@ -100,17 +97,17 @@ class StoreTorrentRequest extends FormRequest
             ],
             'name' => [
                 'required',
-                Rule::unique('torrents')->whereNull('deleted_at'),
+                'unique:torrents',
                 'max:255',
             ],
             'description' => [
                 'required',
-                'max:65535'
+                'max:2097152'
             ],
             'mediainfo' => [
                 'nullable',
                 'sometimes',
-                'max:65535',
+                'max:2097152',
             ],
             'bdinfo' => [
                 'nullable',
@@ -141,8 +138,7 @@ class StoreTorrentRequest extends FormRequest
             'imdb' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
                 ]),
                 Rule::when(!($category->movie_meta || $category->tv_meta), [
                     Rule::in([0]),
@@ -151,8 +147,8 @@ class StoreTorrentRequest extends FormRequest
             'tvdb' => [
                 Rule::when($category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!$category->tv_meta, [
                     Rule::in([0]),
@@ -161,8 +157,8 @@ class StoreTorrentRequest extends FormRequest
             'tmdb' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!($category->movie_meta || $category->tv_meta), [
                     Rule::in([0]),
@@ -171,8 +167,8 @@ class StoreTorrentRequest extends FormRequest
             'mal' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!($category->movie_meta || $category->tv_meta), [
                     Rule::in([0]),
@@ -181,8 +177,8 @@ class StoreTorrentRequest extends FormRequest
             'igdb' => [
                 Rule::when($category->game_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!$category->game_meta, [
                     Rule::in([0]),
@@ -191,16 +187,16 @@ class StoreTorrentRequest extends FormRequest
             'season_number' => [
                 Rule::when($category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::prohibitedIf(!$category->tv_meta),
             ],
             'episode_number' => [
                 Rule::when($category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::prohibitedIf(!$category->tv_meta),
             ],

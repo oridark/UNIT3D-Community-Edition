@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,14 +13,9 @@ declare(strict_types=1);
 
 namespace App\Http\Livewire;
 
-use App\Models\Category;
-use App\Models\Genre;
-use App\Models\Movie;
-use App\Models\Resolution;
 use App\Models\TorrentRequest;
 use App\Models\TorrentRequestBounty;
 use App\Models\TorrentRequestClaim;
-use App\Models\Type;
 use App\Traits\CastLivewireProperties;
 use App\Traits\LivewireSort;
 use Illuminate\Support\Facades\DB;
@@ -47,34 +39,34 @@ class TorrentRequestSearch extends Component
     public string $requestor = '';
 
     /**
-     * @var array<int>
+     * @var string[]
      */
     #[Url(history: true)]
-    public array $categoryIds = [];
+    public array $categories = [];
 
     /**
-     * @var array<int>
+     * @var string[]
      */
     #[Url(history: true)]
-    public array $typeIds = [];
+    public array $types = [];
 
     /**
-     * @var array<int>
+     * @var string[]
      */
     #[Url(history: true)]
-    public array $resolutionIds = [];
+    public array $resolutions = [];
 
     /**
-     * @var array<int>
+     * @var string[]
      */
     #[Url(history: true)]
-    public array $genreIds = [];
+    public array $genres = [];
 
     /**
-     * @var array<string>
+     * @var string[]
      */
     #[Url(history: true)]
-    public array $primaryLanguageNames = [];
+    public array $primaryLanguages = [];
 
     #[Url(history: true)]
     public ?int $tmdbId = null;
@@ -126,55 +118,6 @@ class TorrentRequestSearch extends Component
         $this->castLivewireProperties($field, $value);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, Category>
-     */
-    #[Computed(seconds: 3600, cache: true)]
-    final public function categories(): \Illuminate\Database\Eloquent\Collection
-    {
-        return Category::query()->orderBy('position')->get();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, Type>
-     */
-    #[Computed(seconds: 3600, cache: true)]
-    final public function types(): \Illuminate\Database\Eloquent\Collection
-    {
-        return Type::query()->orderBy('position')->get();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, Resolution>
-     */
-    #[Computed(seconds: 3600, cache: true)]
-    final public function resolutions(): \Illuminate\Database\Eloquent\Collection
-    {
-        return Resolution::query()->orderBy('position')->get();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection<int, Genre>
-     */
-    #[Computed(seconds: 3600, cache: true)]
-    final public function genres(): \Illuminate\Database\Eloquent\Collection
-    {
-        return Genre::query()->orderBy('name')->get();
-    }
-
-    /**
-     * @return \Illuminate\Support\Collection<int, Movie>
-     */
-    #[Computed(seconds: 3600, cache: true)]
-    final public function primaryLanguages(): \Illuminate\Support\Collection
-    {
-        return Movie::query()
-            ->select('original_language')
-            ->distinct()
-            ->orderBy('original_language')
-            ->pluck('original_language');
-    }
-
     #[Computed]
     final public function torrentRequestStat(): ?object
     {
@@ -196,10 +139,10 @@ class TorrentRequestSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<TorrentRequest>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<TorrentRequest>
      */
     #[Computed]
-    final public function torrentRequests(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function torrentRequests(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $user = auth()->user();
         $isRegexAllowed = $user->group->is_modo;
@@ -213,15 +156,15 @@ class TorrentRequestSearch extends Component
             ->withCount(['comments'])
             ->when($this->name !== '', fn ($query) => $query->ofName($this->name, $isRegex($this->name)))
             ->when($this->requestor !== '', fn ($query) => $query->ofUploader($this->requestor))
-            ->when($this->categoryIds !== [], fn ($query) => $query->ofCategory($this->categoryIds))
-            ->when($this->typeIds !== [], fn ($query) => $query->ofType($this->typeIds))
-            ->when($this->resolutionIds !== [], fn ($query) => $query->ofResolution($this->resolutionIds))
+            ->when($this->categories !== [], fn ($query) => $query->ofCategory($this->categories))
+            ->when($this->types !== [], fn ($query) => $query->ofType($this->types))
+            ->when($this->resolutions !== [], fn ($query) => $query->ofResolution($this->resolutions))
             ->when($this->tmdbId !== null, fn ($query) => $query->ofTmdb($this->tmdbId))
             ->when($this->imdbId !== '', fn ($query) => $query->ofImdb((int) (preg_match('/tt0*(?=(\d{7,}))/', $this->imdbId, $matches) ? $matches[1] : $this->imdbId)))
             ->when($this->tvdbId !== null, fn ($query) => $query->ofTvdb((int) $this->tvdbId))
             ->when($this->malId !== null, fn ($query) => $query->ofMal((int) $this->malId))
-            ->when($this->genreIds !== [], fn ($query) => $query->ofGenre($this->genreIds))
-            ->when($this->primaryLanguageNames !== [], fn ($query) => $query->ofPrimaryLanguage($this->primaryLanguageNames))
+            ->when($this->genres !== [], fn ($query) => $query->ofGenre($this->genres))
+            ->when($this->primaryLanguages !== [], fn ($query) => $query->ofPrimaryLanguage($this->primaryLanguages))
             ->when($this->unfilled || $this->claimed || $this->pending || $this->filled, function ($query): void {
                 $query->where(function ($query): void {
                     $query->where(function ($query): void {
@@ -268,11 +211,6 @@ class TorrentRequestSearch extends Component
     {
         return view('livewire.torrent-request-search', [
             'user'                     => auth()->user(),
-            'categories'               => $this->categories,
-            'types'                    => $this->types,
-            'resolutions'              => $this->resolutions,
-            'genres'                   => $this->genres,
-            'primaryLanguages'         => $this->primaryLanguages,
             'torrentRequests'          => $this->torrentRequests,
             'torrentRequestStat'       => $this->torrentRequestStat,
             'torrentRequestBountyStat' => $this->torrentRequestBountyStat,

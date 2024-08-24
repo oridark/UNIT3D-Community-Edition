@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,27 +31,25 @@ use Illuminate\Database\Eloquent\Model;
 class Like extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\LikeFactory> */
     use HasFactory;
 
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{like: 'bool', dislike: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'like'    => 'bool',
-            'dislike' => 'bool',
+            'like'    => 'boolean',
+            'dislike' => 'boolean',
         ];
     }
 
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -67,7 +62,7 @@ class Like extends Model
     /**
      * Belongs To A Post.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Post, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Post, self>
      */
     public function post(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -28,7 +25,7 @@ class AutomaticTorrentFreeleech extends Model
     /**
      * Belongs To A Category.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category, self>
      */
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -38,7 +35,7 @@ class AutomaticTorrentFreeleech extends Model
     /**
      * Belongs To A Type.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Type, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Type, self>
      */
     public function type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -48,7 +45,7 @@ class AutomaticTorrentFreeleech extends Model
     /**
      * Belongs To A Resolution.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Resolution, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Resolution, self>
      */
     public function resolution(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

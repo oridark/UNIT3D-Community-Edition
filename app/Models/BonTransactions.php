@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int      $id
  * @property int      $bon_exchange_id
  * @property string   $name
- * @property string   $cost
+ * @property float    $cost
  * @property int|null $sender_id
  * @property int|null $receiver_id
  * @property int|null $torrent_id
@@ -35,7 +32,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BonTransactions extends Model
 {
-    /** @use HasFactory<\Database\Factories\BonTransactionsFactory> */
     use HasFactory;
 
     /**
@@ -60,21 +56,9 @@ class BonTransactions extends Model
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array{cost: 'decimal:2'}
-     */
-    protected function casts(): array
-    {
-        return [
-            'cost' => 'decimal:2',
-        ];
-    }
-
-    /**
      * Belongs To A Sender.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function sender(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -87,7 +71,7 @@ class BonTransactions extends Model
     /**
      * Belongs To A Receiver.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function receiver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -100,7 +84,7 @@ class BonTransactions extends Model
     /**
      * Belongs To BonExchange.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<BonExchange, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<BonExchange, self>
      */
     public function exchange(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

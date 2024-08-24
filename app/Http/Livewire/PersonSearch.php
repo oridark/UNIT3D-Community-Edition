@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -46,10 +43,10 @@ class PersonSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Person>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Person>
      */
     #[Computed]
-    final public function persons(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function persons(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Person::select(['id', 'still', 'name'])
             ->when($this->search !== '', fn ($query) => $query->where('name', 'LIKE', '%'.$this->search.'%'))
@@ -63,7 +60,7 @@ class PersonSearch extends Component
      * @return \Illuminate\Database\Eloquent\Collection<int, Person>
      */
     #[Computed]
-    final public function firstCharacters(): \Illuminate\Database\Eloquent\Collection
+    final public function firstCharacters()
     {
         return Person::selectRaw('substr(name, 1, 1) as alpha, count(*) as count')
             ->when($this->search !== '', fn ($query) => $query->where('name', 'LIKE', '%'.$this->search.'%'))

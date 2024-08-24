@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -26,7 +23,7 @@ return new class () extends Migration {
             $table->integer('id', true);
             $table->integer('itemID')->unsigned()->default(0);
             $table->string('name')->default('');
-            $table->double('cost')->default(0.00);
+            $table->float('cost', 22)->default(0.00);
             $table->integer('sender')->unsigned()->default(0);
             $table->integer('receiver')->unsigned()->default(0);
             $table->integer('torrent_id')->nullable();

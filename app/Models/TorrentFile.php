@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -30,7 +27,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class TorrentFile extends Model
 {
-    /** @use HasFactory<\Database\Factories\TorrentFileFactory> */
     use HasFactory;
 
     /**
@@ -50,7 +46,7 @@ class TorrentFile extends Model
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -61,11 +58,12 @@ class Language
      * Return true if $code is an allowed lang.
      * Get all allowed languages.
      *
-     * @return ($locale is null ? array<string, string> : bool)
+     * @return bool|array<string, string>
      */
     public static function allowed(?string $locale = null): bool|array
     {
         if ($locale !== null) {
+            /** @phpstan-ignore-next-line `self:allowed()` always returns array since it's passing `null` for the `locale` parameter */
             return \array_key_exists($locale, self::allowed());
         }
 

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -31,8 +28,6 @@ use Illuminate\Database\Eloquent\Model;
 class Internal extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\InternalFactory> */
     use HasFactory;
 
     /**
@@ -52,7 +47,7 @@ class Internal extends Model
     /**
      * Has Many Users.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User>
      */
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

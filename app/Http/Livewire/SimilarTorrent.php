@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -19,6 +16,7 @@ namespace App\Http\Livewire;
 use App\Models\Category;
 use App\Models\History;
 use App\Models\Movie;
+use App\Models\PrivateMessage;
 use App\Models\Torrent;
 use App\Models\TorrentRequest;
 use App\Models\Tv;
@@ -61,12 +59,7 @@ class SimilarTorrent extends Component
     #[Url(history: true)]
     public string $sortDirection = 'desc';
 
-    /**
-     * @var array<string>
-     */
-    protected $listeners = [
-        'destroy' => 'deleteRecords'
-    ];
+    protected $listeners = ['destroy' => 'deleteRecords'];
 
     final public function updating(string $field, mixed &$value): void
     {
@@ -197,7 +190,7 @@ class SimilarTorrent extends Component
             ]);
 
             //Remove Torrent related info
-            cache()->forget(\sprintf('torrent:%s', $torrent->info_hash));
+            cache()->forget(sprintf('torrent:%s', $torrent->info_hash));
 
             $torrent->comments()->delete();
             $torrent->peers()->delete();
@@ -225,16 +218,18 @@ class SimilarTorrent extends Component
         }
 
         foreach ($users as $user) {
-            User::sendSystemNotificationTo(
-                userId: $user,
-                subject: 'Bulk Torrents Deleted - '.$title.'! ',
-                message: '[b]Attention: [/b] The following torrents have been removed from our site.
+            $pmuser = new PrivateMessage();
+            $pmuser->sender_id = User::SYSTEM_USER_ID;
+            $pmuser->receiver_id = $user;
+            $pmuser->subject = 'Bulk Torrents Deleted - '.$title.'! ';
+            $pmuser->message = '[b]Attention: [/b] The following torrents have been removed from our site.
             [list]
                 [*]'.implode(' [*]', $names).'
             [/list]
             Our system shows that you were either the uploader, a seeder or a leecher on said torrent. We just wanted to let you know you can safely remove it from your client.
-                                    [b]Removal Reason: [/b] '.$this->reason,
-            );
+                                    [b]Removal Reason: [/b] '.$this->reason.'
+                                    [color=red][b]THIS IS AN AUTOMATED SYSTEM MESSAGE, PLEASE DO NOT REPLY![/b][/color]';
+            $pmuser->save();
         }
 
         $this->checked = [];

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -32,15 +29,13 @@ use Illuminate\Notifications\Notifiable;
 class Chatroom extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\ChatroomFactory> */
     use HasFactory;
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * The Attributes That Are Mass Assignable.
      *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $fillable = [
         'name',
@@ -49,7 +44,7 @@ class Chatroom extends Model
     /**
      * A User Has Many Messages.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Message, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Message>
      */
     public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -59,7 +54,7 @@ class Chatroom extends Model
     /**
      * A Chat Room Has Many Users.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<User>
      */
     public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

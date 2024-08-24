@@ -32,7 +32,7 @@
                                 <img
                                     class="mediahub-card__image"
                                     src="{{ tmdb_image('logo_mid', $company->logo) }}"
-                                    alt="{{ $company->name }}"
+                                    alt="Logo"
                                 />
                             @else
                                 {{ $company->name }}

@@ -17,7 +17,19 @@
 
 @section('nav-tabs')
     <li class="nav-tabV2">
-        <a class="nav-tab__link" href="{{ route('torrents.index') }}">
+        <a
+            class="nav-tab__link"
+            href="{{
+                route('torrents.index', [
+                    'view' => match (auth()->user()->torrent_layout) {
+                        1 => 'card',
+                        2 => 'group',
+                        3 => 'poster',
+                        default => 'list',
+                    },
+                ])
+            }}"
+        >
             {{ __('torrent.search') }}
         </a>
     </li>
@@ -45,9 +57,9 @@
     <section
         class="upload panelV2"
         x-data="{
-            cat: {{ (int) $category_id }},
-            cats: JSON.parse(atob('{{ base64_encode(json_encode($categories)) }}')),
-        }"
+                cat: {{(int)$category_id}},
+                cats: JSON.parse(atob('{!! base64_encode(json_encode($categories)) !!}'))
+            }"
     >
         <h2 class="upload-title panel__heading">
             <i class="{{ config('other.font-awesome') }} fa-file"></i>
@@ -315,7 +327,7 @@
                         <label class="form__label form__label--floating" for="autoimdb">
                             IMDB ID
                         </label>
-                        <span class="form__hint">Numeric digits only.</span>
+                        <span class="form__hint">Numeric digits only. No leading zeros.</span>
                     </p>
                     <p class="form__group" x-show="cats[cat].type === 'tv'">
                         <input type="hidden" name="tvdb" value="0" />
@@ -562,7 +574,7 @@
     </section>
 @endsection
 
-@if ($user->can_upload ?? $user->group->can_upload)
+@if ($user->can_upload == 1 && $user->group->can_upload == 1)
     @section('sidebar')
         <section class="panelV2">
             <h2 class="panel__heading">
@@ -572,12 +584,7 @@
             <div class="panel__body">
                 <p>
                     {{ __('torrent.announce-url') }}:
-                    <a
-                        x-data="upload"
-                        data-announce-url="{{ route('announce', ['passkey' => $user->passkey]) }}"
-                        x-on:click.prevent="copy"
-                        href="{{ route('announce', ['passkey' => $user->passkey]) }}"
-                    >
+                    <a href="{{ route('announce', ['passkey' => $user->passkey]) }}">
                         {{ route('announce', ['passkey' => $user->passkey]) }}
                     </a>
                 </p>
@@ -597,21 +604,4 @@
     <script src="{{ asset('build/unit3d/parser.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('build/unit3d/helper.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('build/unit3d/imgbb.js') }}" crossorigin="anonymous"></script>
-    <script nonce="{{ HDVinnie\SecureHeaders\SecureHeaders::nonce('script') }}">
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('upload', () => ({
-                copy() {
-                    navigator.clipboard.writeText(this.$el.dataset.announceUrl);
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        icon: 'success',
-                        title: 'Copied to clipboard!',
-                    });
-                },
-            }));
-        });
-    </script>
 @endsection

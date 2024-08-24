@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -70,10 +67,10 @@ class UserNotes extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Note>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Note>
      */
     #[Computed]
-    final public function notes(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function notes(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Note::query()
             ->with('staffuser', 'staffuser.group')
@@ -119,9 +116,8 @@ class UserNotes extends Component
         $this->validateOnly('messages.*');
 
         Note::whereKey($id)->update([
-            'staff_id'   => auth()->id(),
-            'message'    => $this->messages[$id],
-            'updated_at' => now(),
+            'staff_id' => auth()->id(),
+            'message'  => $this->messages[$id],
         ]);
 
         $this->dispatch('success', type: 'success', message: 'Note has successfully been updated!');

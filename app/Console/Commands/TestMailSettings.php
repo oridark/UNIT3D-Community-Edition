@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -20,8 +17,10 @@ use App\Mail\TestEmail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use Exception;
-use Throwable;
 
+/**
+ * @see \Tests\Todo\Unit\Console\Commands\TestMailSettingsTest
+ */
 class TestMailSettings extends Command
 {
     /**
@@ -40,10 +39,8 @@ class TestMailSettings extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
      */
-    final public function handle(): void
+    public function handle(): void
     {
         $owner = config('other.email');
 

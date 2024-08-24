@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -36,15 +33,8 @@ use voku\helper\AntiXSS;
 class Post extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'content',
         'topic_id',
@@ -54,7 +44,7 @@ class Post extends Model
     /**
      * Belongs To A Topic.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Topic, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Topic, self>
      */
     public function topic(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -64,7 +54,7 @@ class Post extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -77,7 +67,7 @@ class Post extends Model
     /**
      * A Post Has Many Likes.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Like, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Like>
      */
     public function likes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -87,7 +77,7 @@ class Post extends Model
     /**
      * A Post Has Many Dislikes.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Like, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Like>
      */
     public function dislikes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -97,7 +87,7 @@ class Post extends Model
     /**
      * Has Many Tips.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PostTip, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<PostTip>
      */
     public function tips(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -107,7 +97,7 @@ class Post extends Model
     /**
      * A Post Author Has Many Posts.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Post, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Post>
      */
     public function authorPosts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -117,7 +107,7 @@ class Post extends Model
     /**
      * A Post Author Has Many Topics.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Topic, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Topic>
      */
     public function authorTopics(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -161,7 +151,7 @@ class Post extends Model
      */
     public function setContentAttribute(?string $value): void
     {
-        $this->attributes['content'] = $value === null ? null : htmlspecialchars((new AntiXSS())->xss_clean($value), ENT_NOQUOTES);
+        $this->attributes['content'] = htmlspecialchars((new AntiXSS())->xss_clean($value), ENT_NOQUOTES);
     }
 
     /**

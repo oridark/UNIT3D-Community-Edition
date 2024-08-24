@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -67,7 +64,7 @@ class UserWarningExpire extends Notification
         return [
             'title' => $this->torrent->name.' Hit and Run Warning Expired',
             'body'  => 'Your Hit and Run Warning has expired or been seeded off on '.$this->torrent->name,
-            'url'   => \sprintf('/torrents/%s', $this->torrent->id),
+            'url'   => sprintf('/torrents/%s', $this->torrent->id),
         ];
     }
 }

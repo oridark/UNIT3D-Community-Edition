@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * NOTICE OF LICENSE.
  *
@@ -148,7 +146,6 @@ return [
     'important'                            => 'Important',
     'important-info'                       => 'Important Info',
     'information'                          => 'Information',
-    'internal-releases'                    => 'Internal Releases',
     'invited-by'                           => 'Invited By',
     'invite-already-sent'                  => 'The email address your trying to send a invite to has already been sent one.',
     'invite-already-used'                  => 'The invite you are trying to resend has already been used.',
@@ -184,7 +181,6 @@ return [
     'my-achievements'                => 'My Achievements',
     'my-bonus-points'                => 'My Bonus Points',
     'my-bookmarks'                   => 'My Bookmarks',
-    'my-downloads'                   => 'My Downloads',
     'my-fl-tokens'                   => 'My FL tokens',
     'my-general-settings'            => 'My General Settings',
     'my-notification'                => 'My Notification',
@@ -372,13 +368,11 @@ return [
     'torrents-history'         => 'Torrents History',
     'total-download'           => 'Total Download',
     'total-downloads'          => 'Total Downloads',
-    'total-internal-releases'  => 'Total Internal Releases',
     'total-leeching'           => 'Total Leeching',
     'total-seeding'            => 'Total Seeding',
     'total-seedtime'           => 'Total Seedtime',
     'total-upload'             => 'Total Upload',
     'total-uploads'            => 'Total Uploads',
-    'total-personal-releases'  => 'Total Personal Releases',
     'two-step-auth'            => [
         'title'                     => 'Two-Factor Authentication',
         'totp'                      => 'Time-based One-time Password (TOTP) Authentication',
@@ -405,7 +399,6 @@ return [
     'upload-true'                 => 'True Upload',
     'uploads'                     => 'Uploads',
     'uploads-table'               => 'Uploads Table',
-    'personal-releases'           => 'Personal Releases',
     'user'                        => 'User',
     'user-id'                     => 'User ID',
     'username-seedbox'            => 'Username Seedbox',

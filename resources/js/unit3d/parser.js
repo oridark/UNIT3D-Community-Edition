@@ -200,11 +200,7 @@ const properties = [
 function clean(string, erase) {
     let result = string;
     erase.forEach(
-        (regexp) =>
-            (result = result.replace(
-                new RegExp(`[\.\-]*?${regexp.replace(/\\\\/g, '\\')}[\.\-]*?`, 'ig'),
-                '',
-            )),
+        (regexp) => (result = result.replace(new RegExp(`[\.\-]*?${regexp.replace(/\\\\/g, '\\')}[\.\-]*?`, 'ig'), ''))
     );
     result = result.trim();
     result = result.replace(/[\[\]\(\)\;\:\!\s\\\.]+/g, '.');
@@ -236,8 +232,7 @@ function deduce(property, name, multi = false) {
             const matches = name.match(regexp);
 
             if (matches !== null) {
-                result.match =
-                    matches[1].length > 12 ? matches[1].replace(/[_\.].+?$/, '') : matches[1];
+                result.match = matches[1].length > 12 ? matches[1].replace(/[_\.].+?$/, '') : matches[1];
                 result.waste = name.replace(regexp, '');
             }
 
@@ -272,11 +267,7 @@ function deduce(property, name, multi = false) {
             result.match = match
                 .map(Number)
                 .sort((a, b) => a - b)
-                .reduce(
-                    (res, episode, index, match) =>
-                        match.length === 1 ? episode : match.join('-'),
-                    null,
-                );
+                .reduce((res, episode, index, match) => (match.length === 1 ? episode : match.join('-')), null);
 
             return result;
         }
@@ -357,10 +348,7 @@ function stringify(release, options) {
             [
                 release.season ? 'S' + release.season.toString().padStart(2, '0') : null,
                 release.episodes.length
-                    ? 'E' +
-                      release.episodes
-                          .map((episode) => episode.toString().padStart(2, '0'))
-                          .join('-E')
+                    ? 'E' + release.episodes.map((episode) => episode.toString().padStart(2, '0')).join('-E')
                     : null,
             ].join(''),
             release.resolution,
@@ -386,7 +374,7 @@ function parse(name, options = { strict: false, flagged: true, erase: [], defaul
         {
             language: 'VO',
         },
-        options.defaults,
+        options.defaults
     );
 
     const cleaned = clean(name, [...(options.erase || []), ...rules.erase]);
@@ -416,9 +404,7 @@ function parse(name, options = { strict: false, flagged: true, erase: [], defaul
         .replace(/[\.\-]+/, '.')
         .split('.')
         .filter((word, position) => word === words[position])
-        .map((word) =>
-            word.split('').every((char) => ['i', 'I'].includes(char)) ? word.length : word,
-        )
+        .map((word) => (word.split('').every((char) => ['i', 'I'].includes(char)) ? word.length : word))
         .join(' ')
         .toLowerCase()
         .replace(/(^([a-zA-Z\p{M}]))|([ -][a-zA-Z\p{M}])/g, (s) => s.toUpperCase()); // ucwords

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -29,8 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 class Distributor extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\DistributorFactory> */
     use HasFactory;
 
     /**
@@ -50,7 +45,7 @@ class Distributor extends Model
     /**
      * Has Many Torrents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent>
      */
     public function torrents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -60,7 +55,7 @@ class Distributor extends Model
     /**
      * Has Many Torrent Requests.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest>
      */
     public function requests(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

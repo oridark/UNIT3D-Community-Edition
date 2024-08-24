@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -30,31 +27,35 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null                     $color
  * @property string|null                     $icon
  * @property string|null                     $emoji
+ * @property string|null                     $info
+ * @property string|null                     $about
  * @property string|null                     $help
  * @property int                             $active
  * @property int                             $is_protected
  * @property int                             $is_nerdbot
  * @property int                             $is_systembot
+ * @property int                             $uploaded
+ * @property int                             $downloaded
+ * @property int                             $fl_tokens
+ * @property float                           $seedbonus
+ * @property int                             $invites
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
 class Bot extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\BotFactory> */
     use HasFactory;
 
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{name: 'string', cost: 'decimal:2'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'name' => 'string',
-            'cost' => 'decimal:2',
         ];
     }
 

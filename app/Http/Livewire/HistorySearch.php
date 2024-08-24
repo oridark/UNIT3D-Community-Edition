@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property \Illuminate\Pagination\LengthAwarePaginator $histories
+ * @property \Illuminate\Contracts\Pagination\LengthAwarePaginator $histories
  */
 class HistorySearch extends Component
 {
@@ -92,10 +89,10 @@ class HistorySearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<History>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<History>
      */
     #[Computed]
-    final public function histories(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function histories(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return History::query()
             ->with('user', 'torrent:id,name')
@@ -117,7 +114,7 @@ class HistorySearch extends Component
                         DB::raw('MAX(updated_at) AS updated_at_max'),
                         DB::raw('SUM(active AND seeder) AS seeding_count'),
                         DB::raw('SUM(active AND NOT seeder) AS leeching_count'),
-                        DB::raw('SUM(prewarned_at IS NOT NULL) AS prewarn_count'),
+                        DB::raw('SUM(prewarn = 1) AS prewarn_count'),
                         DB::raw('SUM(hitrun = 1) AS hitrun_count'),
                         DB::raw('SUM(immune = 1) AS immune_count'),
                     ])
@@ -142,7 +139,7 @@ class HistorySearch extends Component
                         'completed_at',
                         DB::raw('active AND seeder AS seeding'),
                         DB::raw('active AND NOT seeder AS leeching '),
-                        'prewarned_at',
+                        'prewarn',
                         'hitrun',
                         'immune',
                     ])

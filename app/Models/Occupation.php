@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -30,8 +27,6 @@ use Illuminate\Database\Eloquent\Model;
 class Occupation extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\OccupationFactory> */
     use HasFactory;
 
     /**
@@ -42,7 +37,7 @@ class Occupation extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Person, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Person>
      */
     public function people(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -50,7 +45,7 @@ class Occupation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Credit, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Credit>
      */
     public function credits(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

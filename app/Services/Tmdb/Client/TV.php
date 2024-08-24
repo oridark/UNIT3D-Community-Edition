@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,6 +13,7 @@ declare(strict_types=1);
 
 namespace App\Services\Tmdb\Client;
 
+use JsonException;
 use App\Enums\Occupation;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
@@ -24,7 +22,7 @@ use Illuminate\Support\Str;
 class TV
 {
     /**
-     * @var ?array{
+     * @var array{
      *     adult: ?bool,
      *     backdrop_path: ?string,
      *     created_by: ?array<
@@ -259,7 +257,7 @@ class TV
      *         results: ?array<
      *             int,
      *             ?array{
-     *                 adult: ?bool,
+     *                 adult: ?boolean,
      *                 backdrop_path: ?string,
      *                 id: ?int,
      *                 name: ?string,
@@ -292,12 +290,13 @@ class TV
      *     }
      * }
      */
-    public null|array $data;
+    public array $data;
 
     public TMDB $tmdb;
 
     /**
-     * @throws \Illuminate\Http\Client\ConnectionException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws JsonException
      */
     public function __construct(int $id)
     {
@@ -340,7 +339,7 @@ class TV
      */
     public function getTv(): ?array
     {
-        if (isset($this->data['id'], $this->data['name'])) {
+        if (isset($this->data['id'])) {
             return [
                 'backdrop'           => $this->tmdb->image('backdrop', $this->data),
                 'episode_run_time'   => $this->tmdb->ifHasItems('episode_run_time', $this->data),
@@ -380,7 +379,7 @@ class TV
     {
         $genres = [];
 
-        foreach ($this->data['genres'] ?? [] as $genre) {
+        foreach ($this->data['genres'] as $genre) {
             $genres[] = [
                 'id'   => $genre['id'],
                 'name' => $genre['name'],
@@ -407,7 +406,7 @@ class TV
         $credits = [];
 
         foreach ($this->data['aggregate_credits']['cast'] ?? [] as $person) {
-            foreach ($person['roles'] ?? [] as $role) {
+            foreach ($person['roles'] as $role) {
                 $credits[] = [
                     'tv_id'         => $this->data['id'],
                     'person_id'     => $person['id'],
@@ -419,11 +418,7 @@ class TV
         }
 
         foreach ($this->data['aggregate_credits']['crew'] ?? [] as $person) {
-            foreach ($person['jobs'] ?? [] as $job) {
-                if (!\array_key_exists('job', $job) || $job['job'] === null) {
-                    continue;
-                }
-
+            foreach ($person['jobs'] as $job) {
                 $occupation = Occupation::from_tmdb_job($job['job']);
 
                 if ($occupation !== null) {
@@ -464,7 +459,7 @@ class TV
     {
         $seasons = [];
 
-        foreach ($this->data['seasons'] ?? [] as $season) {
+        foreach ($this->data['seasons'] as $season) {
             if ($season['season_number'] !== null) {
                 $seasons[] = [
                     'id'            => $season['id'],
@@ -499,10 +494,6 @@ class TV
         $recommendations = [];
 
         foreach ($this->data['recommendations']['results'] ?? [] as $recommendation) {
-            if ($recommendation === null || $recommendation['id'] === null) {
-                continue;
-            }
-
             if ($tv_ids->contains($recommendation['id'])) {
                 $recommendations[] = [
                     'recommendation_tv_id' => $recommendation['id'],

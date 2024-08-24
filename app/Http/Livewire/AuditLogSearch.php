@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -77,10 +74,10 @@ class AuditLogSearch extends Component
 
     /**
      * @throws JsonException
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Audit>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Audit>
      */
     #[Computed]
-    final public function audits(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function audits(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $audits = Audit::with('user')
             ->when($this->username, fn ($query) => $query->whereRelation('user', 'username', '=', $this->username))

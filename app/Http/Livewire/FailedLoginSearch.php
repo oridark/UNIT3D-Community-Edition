@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -60,9 +57,6 @@ class FailedLoginSearch extends Component
             ->select(['ip_address', DB::raw('COUNT(*) as login_attempts'), DB::raw('MAX(created_at) as latest_created_at')])
             ->groupBy('ip_address')
             ->having('login_attempts', '>', '3')
-            /**
-             * @phpstan-ignore-next-line
-             */
             ->having('latest_created_at', '>=', Carbon::now()->subWeek())
             ->orderByDesc('login_attempts')
             ->limit(10)
@@ -70,10 +64,10 @@ class FailedLoginSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<FailedLoginAttempt>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<FailedLoginAttempt>
      */
     #[Computed]
-    final public function failedLogins(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function failedLogins(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return FailedLoginAttempt::query()
             ->with('user.group')

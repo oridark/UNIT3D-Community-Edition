@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -41,7 +38,12 @@ class UnbanController extends Controller
 
         $user->update([
             'group_id'     => $request->group_id,
+            'can_upload'   => 1,
             'can_download' => 1,
+            'can_comment'  => 1,
+            'can_invite'   => 1,
+            'can_request'  => 1,
+            'can_chat'     => 1,
         ]);
 
         Ban::create([

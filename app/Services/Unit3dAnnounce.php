@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -23,10 +20,6 @@ use App\Models\Torrent;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\MessageBag;
-use Illuminate\Support\ViewErrorBag;
-use Throwable;
 
 class Unit3dAnnounce
 {
@@ -115,7 +108,6 @@ class Unit3dAnnounce
      *                 port: int,
      *                 is_seeder: bool,
      *                 is_active: bool,
-     *                 is_visible: bool,
      *                 updated_at: int,
      *                 uploaded: int,
      *                 downloaded: int,
@@ -158,7 +150,6 @@ class Unit3dAnnounce
                 || !\array_key_exists('port', $peer) || !\is_int($peer['port'])
                 || !\array_key_exists('is_seeder', $peer) || !\is_bool($peer['is_seeder'])
                 || !\array_key_exists('is_active', $peer) || !\is_bool($peer['is_active'])
-                || !\array_key_exists('is_visible', $peer) || !\is_bool($peer['is_visible'])
                 || !\array_key_exists('updated_at', $peer) || !\is_int($peer['updated_at'])
                 || !\array_key_exists('uploaded', $peer) || !\is_int($peer['uploaded'])
                 || !\array_key_exists('downloaded', $peer) || !\is_int($peer['downloaded'])
@@ -178,7 +169,7 @@ class Unit3dAnnounce
 
         $peers = Peer::query()
             ->where('user_id', '=', $user->id)
-            ->selectRaw('SUM(seeder = 1 AND active = 1 AND visible = 1) as num_seeding, SUM(seeder = 0 AND active = 1 AND visible = 1) as num_leeching')
+            ->selectRaw('SUM(seeder = 1 AND active = 1) as num_seeding, SUM(seeder = 0 AND active = 1) as num_leeching')
             ->first();
 
         return self::put('users', [
@@ -239,7 +230,7 @@ class Unit3dAnnounce
         return self::put('groups', [
             'id'               => $group->id,
             'slug'             => $group->slug,
-            'download_slots'   => (int) $group->download_slots,
+            'download_slots'   => $group->download_slots,
             'is_immune'        => (bool) $group->is_immune,
             'is_freeleech'     => (bool) $group->is_freeleech,
             'is_double_upload' => (bool) $group->is_double_upload,
@@ -253,17 +244,17 @@ class Unit3dAnnounce
         ]);
     }
 
-    public static function addBlacklistedAgent(BlacklistClient $blacklistedAgent): bool
+    public static function addBlacklistedAgent(String $blacklistedAgent): bool
     {
         return self::put('blacklisted-agents', [
-            'peer_id_prefix' => $blacklistedAgent->name,
+            'name' => $blacklistedAgent,
         ]);
     }
 
     public static function removeBlacklistedAgent(BlacklistClient $blacklistedClient): bool
     {
         return self::delete('blacklisted-agents', [
-            'peer_id_prefix' => $blacklistedClient->name,
+            'name' => $blacklistedClient->name,
         ]);
     }
 
@@ -317,11 +308,7 @@ class Unit3dAnnounce
             $route = 'http://'.config('announce.external_tracker.host').':'.config('announce.external_tracker.port').'/announce/'.config('announce.external_tracker.key').'/'.$path.'/'.$id;
             $route = rtrim($route, "/");
 
-            try {
-                $response = Http::acceptJson()->get($route);
-            } catch (Throwable) {
-                return [];
-            }
+            $response = Http::acceptJson()->get($route);
 
             if (!$response->ok()) {
                 Log::notice('External tracker error - GET', [
@@ -380,8 +367,6 @@ class Unit3dAnnounce
                     'path'   => $path,
                     'data'   => $data,
                 ]);
-
-                Session::flash('errors', (new ViewErrorBag())->put('test', (new MessageBag(['External tracker returned error']))));
             }
 
             return $isSuccess;
@@ -426,8 +411,6 @@ class Unit3dAnnounce
                     'path'   => $path,
                     'data'   => $data,
                 ]);
-
-                Session::flash('errors', (new ViewErrorBag())->put('test', (new MessageBag(['External tracker returned error']))));
             }
 
             return $isSuccess;

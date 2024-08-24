@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -50,10 +47,10 @@ class MissingMediaSearch extends Component
     public int $perPage = 50;
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Movie>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Movie>
      */
     #[Computed]
-    final public function medias(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function medias(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Movie::with(['torrents:tmdb,resolution_id,type_id' => ['resolution:id,position,name']])
             ->when($this->name, fn ($query) => $query->where('title', 'LIKE', '%'.$this->name.'%'))
@@ -69,7 +66,7 @@ class MissingMediaSearch extends Component
     #[Computed]
     final public function types(): \Illuminate\Database\Eloquent\Collection
     {
-        return Type::select(['id', 'position', 'name'])->orderBy('position')->get();
+        return Type::select('id', 'position', 'name')->orderBy('position')->get();
     }
 
     final public function render(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application

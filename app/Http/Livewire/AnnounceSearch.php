@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -24,7 +21,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property \Illuminate\Pagination\LengthAwarePaginator<Announce> $announces
+ * @property \Illuminate\Contracts\Pagination\LengthAwarePaginator<Announce> $announces
  */
 class AnnounceSearch extends Component
 {
@@ -59,10 +56,10 @@ class AnnounceSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Announce>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Announce>
      */
     #[Computed]
-    final public function announces(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function announces(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Announce::query()
             ->when($this->torrentId !== '', fn ($query) => $query->where('torrent_id', '=', $this->torrentId))

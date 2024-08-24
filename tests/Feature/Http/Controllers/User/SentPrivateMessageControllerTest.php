@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -23,7 +20,7 @@ test('create returns an ok response', function (): void {
     $user = User::factory()->create();
     $authUser = User::factory()->create();
 
-    $response = $this->actingAs($authUser)->get(route('users.conversations.create', [$user]));
+    $response = $this->actingAs($authUser)->get(route('users.sent_messages.create', [$user]));
 
     $response->assertOk();
     $response->assertViewIs('user.sent-private-message.create');

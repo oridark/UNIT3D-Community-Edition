@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -46,7 +43,7 @@ class SimilarTorrentController extends Controller
                     'credits' => ['person', 'occupation'],
                     'companies'
                 ])
-                    ->findOrFail($tmdbId);
+                    ->find($tmdbId);
                 $tmdb = $tmdbId;
 
                 break;
@@ -61,7 +58,7 @@ class SimilarTorrentController extends Controller
                     'companies',
                     'networks'
                 ])
-                    ->findOrFail($tmdbId);
+                    ->find($tmdbId);
                 $tmdb = $tmdbId;
 
                 break;
@@ -79,7 +76,7 @@ class SimilarTorrentController extends Controller
                     'involved_companies.company.logo',
                     'platforms',
                 ])
-                    ->findOrFail($tmdbId);
+                    ->find($tmdbId);
                 $link = collect($meta->videos)->take(1)->pluck('video_id');
                 $platforms = PlatformLogo::whereIn('id', collect($meta->platforms)->pluck('platform_logo')->toArray())->get();
                 $igdb = $tmdbId;

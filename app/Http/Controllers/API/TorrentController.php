@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,7 +13,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API;
 
-use App\DTO\TorrentSearchFiltersDTO;
 use App\Helpers\Bencode;
 use App\Helpers\TorrentHelper;
 use App\Helpers\TorrentTools;
@@ -101,7 +97,7 @@ class TorrentController extends BaseController
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $user = $request->user();
-        abort_unless($user->can_upload ?? $user->group->can_upload, 403, __('torrent.cant-upload').' '.__('torrent.cant-upload-desc'));
+        abort_if($user->can_upload === false || $user->group->can_upload == 0, 403, __('torrent.cant-upload').' '.__('torrent.cant-upload-desc'));
 
         $requestFile = $request->file('torrent');
 
@@ -129,11 +125,11 @@ class TorrentController extends BaseController
             }
         }
 
-        $fileName = \sprintf('%s.torrent', uniqid('', true)); // Generate a unique name
+        $fileName = sprintf('%s.torrent', uniqid('', true)); // Generate a unique name
         Storage::disk('torrents')->put($fileName, Bencode::bencode($decodedTorrent));
 
         // Find the right category
-        $category = Category::withCount('torrents')->findOrFail($request->integer('category_id'));
+        $category = Category::withCount('torrents')->findOrFail($request->input('category_id'));
 
         // Create the torrent (DB)
         $torrent = app()->make(Torrent::class);
@@ -165,7 +161,7 @@ class TorrentController extends BaseController
         $torrent->sd = $request->input('sd');
         $torrent->personal_release = $request->input('personal_release') ?? 0;
         $torrent->internal = $user->group->is_modo || $user->group->is_internal ? ($request->input('internal') ?? 0) : 0;
-        $torrent->featured = $user->group->is_modo || $user->group->is_internal ? ($request->input('featured') ?? false) : false;
+        $torrent->featured = $user->group->is_modo || $user->group->is_internal ? ($request->input('featured') ?? 0) : 0;
         $torrent->doubleup = $user->group->is_modo || $user->group->is_internal ? ($request->input('doubleup') ?? 0) : 0;
         $torrent->refundable = $user->group->is_modo || $user->group->is_internal ? ($request->input('refundable') ?? 0) : 0;
         $du_until = $request->input('du_until');
@@ -184,7 +180,7 @@ class TorrentController extends BaseController
         $torrent->moderated_by = User::where('username', 'System')->first()->id; //System ID
 
         // Set freeleech and doubleup if featured
-        if ($torrent->featured === true) {
+        if ($torrent->featured == 1) {
             $torrent->free = 100;
             $torrent->doubleup = true;
         }
@@ -193,7 +189,7 @@ class TorrentController extends BaseController
         $v = validator($torrent->toArray(), [
             'name' => [
                 'required',
-                Rule::unique('torrents')->whereNull('deleted_at'),
+                'unique:torrents',
                 'max:255',
             ],
             'description' => [
@@ -201,7 +197,7 @@ class TorrentController extends BaseController
             ],
             'info_hash' => [
                 'required',
-                Rule::unique('torrents')->whereNull('deleted_at'),
+                'unique:torrents',
             ],
             'file_name' => [
                 'required',
@@ -342,7 +338,7 @@ class TorrentController extends BaseController
         // Backup the files contained in the torrent
         $files = TorrentTools::getTorrentFiles($decodedTorrent);
 
-        foreach ($files as &$file) {
+        foreach($files as &$file) {
             $file['torrent_id'] = $torrent->id;
         }
 
@@ -386,35 +382,35 @@ class TorrentController extends BaseController
             // Announce To Shoutbox
             if ($anon == 0) {
                 $this->chatRepository->systemMessage(
-                    \sprintf('User [url=%s/users/', $appurl).$username.']'.$username.\sprintf('[/url] has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url], grab it now!'
+                    sprintf('User [url=%s/users/', $appurl).$username.']'.$username.sprintf('[/url] has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url], grab it now!'
                 );
             } else {
                 $this->chatRepository->systemMessage(
-                    \sprintf('An anonymous user has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url], grab it now!'
+                    sprintf('An anonymous user has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url], grab it now!'
                 );
             }
 
             if ($anon == 1 && $featured == 1) {
                 $this->chatRepository->systemMessage(
-                    \sprintf('Ladies and Gents, [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url] has been added to the Featured Torrents Slider by an anonymous user! Grab It While You Can!'
+                    sprintf('Ladies and Gents, [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.'[/url] has been added to the Featured Torrents Slider by an anonymous user! Grab It While You Can!'
                 );
             } elseif ($anon == 0 && $featured == 1) {
                 $this->chatRepository->systemMessage(
-                    \sprintf('Ladies and Gents, [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.\sprintf('[/url] has been added to the Featured Torrents Slider by [url=%s/users/', $appurl).$username.']'.$username.'[/url]! Grab It While You Can!'
+                    sprintf('Ladies and Gents, [url=%s/torrents/', $appurl).$torrent->id.']'.$torrent->name.sprintf('[/url] has been added to the Featured Torrents Slider by [url=%s/users/', $appurl).$username.']'.$username.'[/url]! Grab It While You Can!'
                 );
             }
 
             if ($free >= 1 && $featured == 0) {
                 if ($torrent->fl_until === null) {
                     $this->chatRepository->systemMessage(
-                        \sprintf(
+                        sprintf(
                             'Ladies and Gents, [url=%s/torrents/',
                             $appurl
                         ).$torrent->id.']'.$torrent->name.'[/url] has been granted '.$free.'% FreeLeech! Grab It While You Can!'
                     );
                 } else {
                     $this->chatRepository->systemMessage(
-                        \sprintf(
+                        sprintf(
                             'Ladies and Gents, [url=%s/torrents/',
                             $appurl
                         ).$torrent->id.']'.$torrent->name.'[/url] has been granted '.$free.'% FreeLeech for '.$request->input('fl_until').' days.'
@@ -425,14 +421,14 @@ class TorrentController extends BaseController
             if ($doubleup == 1 && $featured == 0) {
                 if ($torrent->du_until === null) {
                     $this->chatRepository->systemMessage(
-                        \sprintf(
+                        sprintf(
                             'Ladies and Gents, [url=%s/torrents/',
                             $appurl
                         ).$torrent->id.']'.$torrent->name.'[/url] has been granted Double Upload! Grab It While You Can!'
                     );
                 } else {
                     $this->chatRepository->systemMessage(
-                        \sprintf(
+                        sprintf(
                             'Ladies and Gents, [url=%s/torrents/',
                             $appurl
                         ).$torrent->id.']'.$torrent->name.'[/url] has been granted Double Upload for '.$request->input('du_until').' days.'
@@ -464,18 +460,21 @@ class TorrentController extends BaseController
             ")
             ->findOrFail($id);
 
-        $torrent->setAttribute('meta', null);
+        $torrent->meta = null;
 
         if ($torrent->category->tv_meta && $torrent->tmdb) {
-            $torrent->setAttribute('meta', Tv::with(['genres'])->find($torrent->tmdb));
+            $torrent->meta = Tv::with(['genres'])
+                ->find($torrent->tmdb);
         }
 
         if ($torrent->category->movie_meta && $torrent->tmdb) {
-            $torrent->setAttribute('meta', Movie::with(['genres'])->find($torrent->tmdb));
+            $torrent->meta = Movie::with(['genres'])
+                ->find($torrent->tmdb);
         }
 
         if ($torrent->category->game_meta && $torrent->igdb) {
-            $torrent->setAttribute('meta', Game::with(['genres' => ['name']])->find($torrent->igdb));
+            $torrent->meta = Game::with([ 'genres' => ['name']])
+                ->find($torrent->igdb);
         }
 
         TorrentResource::withoutWrapping();
@@ -490,6 +489,11 @@ class TorrentController extends BaseController
     {
         $user = auth()->user();
         $isRegexAllowed = $user->group->is_modo;
+        $isRegex = fn ($field) => $isRegexAllowed
+            && \strlen((string) $field) > 2
+            && $field[0] === '/'
+            && $field[-1] === '/'
+            && @preg_match($field, 'Validate regex') !== false;
 
         // Caching
         $url = $request->url();
@@ -506,7 +510,7 @@ class TorrentController extends BaseController
         $queryString = http_build_query($queryParams);
         $cacheKey = $url.'?'.$queryString;
 
-        $torrents = cache()->remember($cacheKey, 300, function () use ($request) {
+        $torrents = cache()->remember($cacheKey, 300, function () use ($request, $isRegex) {
             $torrents = Torrent::with(['user:id,username', 'category', 'type', 'resolution', 'distributor', 'region', 'files'])
                 ->select('*')
                 ->selectRaw("
@@ -518,42 +522,40 @@ class TorrentController extends BaseController
                         WHEN category_id IN (SELECT `id` from `categories` where `no_meta` = 1) THEN 'no'
                     END as meta
                 ")
-                ->where((new TorrentSearchFiltersDTO(
-                    name: $request->filled('name') ? $request->string('name')->toString() : '',
-                    description: $request->filled('description') ? $request->string('description')->toString() : '',
-                    mediainfo: $request->filled('mediainfo') ? $request->string('mediainfo')->toString() : '',
-                    uploader: $request->filled('uploader') ? $request->string('uploader')->toString() : '',
-                    keywords: $request->filled('keywords') ? array_map('trim', explode(',', $request->string('keywords')->toString())) : [],
-                    startYear: $request->filled('startYear') ? $request->integer('startYear') : null,
-                    endYear: $request->filled('endYear') ? $request->integer('endYear') : null,
-                    categoryIds: $request->filled('categories') ? array_map('intval', $request->categories) : [],
-                    typeIds: $request->filled('types') ? array_map('intval', $request->types) : [],
-                    resolutionIds: $request->filled('resolutions') ? array_map('intval', $request->resolutions) : [],
-                    genreIds: $request->filled('genres') ? array_map('intval', $request->genres) : [],
-                    tmdbId: $request->filled('tmdbId') ? $request->integer('tmdbId') : null,
-                    imdbId: $request->filled('imdbId') ? $request->integer('imdbId') : null,
-                    tvdbId: $request->filled('tvdbId') ? $request->integer('tvdbId') : null,
-                    malId: $request->filled('malId') ? $request->integer('malId') : null,
-                    playlistId: $request->filled('playlistId') ? $request->integer('playlistId') : null,
-                    collectionId: $request->filled('collectionId') ? $request->integer('collectionId') : null,
-                    primaryLanguageNames: $request->filled('primaryLanguages') ? array_map('str', $request->primaryLanguages) : [],
-                    adult: $request->filled('adult') ? $request->boolean('adult') : null,
-                    free: $request->filled('free') ? array_map('intval', (array) $request->free) : [],
-                    doubleup: $request->filled('doubleup'),
-                    refundable: $request->filled('refundable'),
-                    featured: $request->filled('featured'),
-                    stream: $request->filled('stream'),
-                    sd: $request->filled('sd'),
-                    highspeed: $request->filled('highspeed'),
-                    internal: $request->filled('internal'),
-                    personalRelease: $request->filled('personalRelease'),
-                    alive: $request->filled('alive'),
-                    dying: $request->filled('dying'),
-                    dead: $request->filled('dead'),
-                    filename: $request->filled('file_name') ? $request->string('file_name')->toString() : '',
-                    seasonNumber: $request->filled('seasonNumber') ? $request->integer('seasonNumber') : null,
-                    episodeNumber: $request->filled('episodeNumber') ? $request->integer('episodeNumber') : null,
-                ))->toSqlQueryBuilder())
+                ->when($request->filled('name'), fn ($query) => $query->ofName($request->name, $isRegex($request->name)))
+                ->when($request->filled('description'), fn ($query) => $query->ofDescription($request->description, $isRegex($request->description)))
+                ->when($request->filled('mediainfo'), fn ($query) => $query->ofMediainfo($request->mediainfo, $isRegex($request->mediainfo)))
+                ->when($request->filled('uploader'), fn ($query) => $query->ofUploader($request->uploader))
+                ->when($request->filled('keywords'), fn ($query) => $query->ofKeyword(array_map('trim', explode(',', $request->keywords))))
+                ->when($request->filled('startYear'), fn ($query) => $query->releasedAfterOrIn((int) $request->startYear))
+                ->when($request->filled('endYear'), fn ($query) => $query->releasedBeforeOrIn((int) $request->endYear))
+                ->when($request->filled('categories'), fn ($query) => $query->ofCategory($request->categories))
+                ->when($request->filled('types'), fn ($query) => $query->ofType($request->types))
+                ->when($request->filled('resolutions'), fn ($query) => $query->ofResolution($request->resolutions))
+                ->when($request->filled('genres'), fn ($query) => $query->ofGenre($request->genres))
+                ->when($request->filled('tmdbId'), fn ($query) => $query->ofTmdb((int) $request->tmdbId))
+                ->when($request->filled('imdbId'), fn ($query) => $query->ofImdb((int) $request->imdbId))
+                ->when($request->filled('tvdbId'), fn ($query) => $query->ofTvdb((int) $request->tvdbId))
+                ->when($request->filled('malId'), fn ($query) => $query->ofMal((int) $request->malId))
+                ->when($request->filled('playlistId'), fn ($query) => $query->ofPlaylist((int) $request->playlistId))
+                ->when($request->filled('collectionId'), fn ($query) => $query->ofCollection((int) $request->collectionId))
+                ->when($request->filled('primaryLanguages'), fn ($query) => $query->ofOriginalLanguage($request->primaryLanguages))
+                ->when($request->filled('adult'), fn ($query) => $query->ofAdult($request->boolean('adult')))
+                ->when($request->filled('free'), fn ($query) => $query->ofFreeleech($request->free))
+                ->when($request->filled('doubleup'), fn ($query) => $query->doubleup())
+                ->when($request->filled('refundable'), fn ($query) => $query->ofRefundable($request->boolean('refundable')))
+                ->when($request->filled('featured'), fn ($query) => $query->featured())
+                ->when($request->filled('stream'), fn ($query) => $query->streamOptimized())
+                ->when($request->filled('sd'), fn ($query) => $query->sd())
+                ->when($request->filled('highspeed'), fn ($query) => $query->highspeed())
+                ->when($request->filled('internal'), fn ($query) => $query->internal())
+                ->when($request->filled('personalRelease'), fn ($query) => $query->personalRelease())
+                ->when($request->filled('alive'), fn ($query) => $query->alive())
+                ->when($request->filled('dying'), fn ($query) => $query->dying())
+                ->when($request->filled('dead'), fn ($query) => $query->dead())
+                ->when($request->filled('file_name'), fn ($query) => $query->ofFilename($request->file_name))
+                ->when($request->filled('seasonNumber'), fn ($query) => $query->ofSeason((int) $request->seasonNumber))
+                ->when($request->filled('episodeNumber'), fn ($query) => $query->ofEpisode((int) $request->episodeNumber))
                 ->latest('sticky')
                 ->orderBy($request->input('sortField') ?? $this->sortField, $request->input('sortDirection') ?? $this->sortDirection)
                 ->cursorPaginate(min($request->input('perPage') ?? $this->perPage, 100));

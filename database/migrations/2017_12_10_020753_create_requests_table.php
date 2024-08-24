@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -33,7 +30,7 @@ return new class () extends Migration {
             $table->string('mal')->nullable()->index('mal');
             $table->text('description');
             $table->integer('user_id')->index('requests_user_id_foreign');
-            $table->double('bounty');
+            $table->float('bounty', 22);
             $table->integer('votes')->default(0);
             $table->boolean('claimed')->nullable();
             $table->timestamps();

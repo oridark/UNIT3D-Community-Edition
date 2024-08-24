@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -24,7 +21,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property \Illuminate\Pagination\LengthAwarePaginator $gifts
+ * @property \Illuminate\Contracts\Pagination\LengthAwarePaginator $gifts
  */
 class GiftLogSearch extends Component
 {
@@ -52,10 +49,10 @@ class GiftLogSearch extends Component
     public int $perPage = 25;
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Gift>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Gift>
      */
     #[Computed]
-    final public function gifts(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function gifts(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Gift::with([
             'sender'    => fn ($query) => $query->withTrashed()->with('group'),

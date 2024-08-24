@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -63,11 +60,8 @@ class LaravelLogViewer extends Component
             ->sortByDesc(fn (SplFileInfo $file) => $file->getMTime())->values();
     }
 
-    /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<\Illuminate\Support\Collection<string|int, mixed>>
-     */
     #[Computed]
-    final public function entries(): LengthAwarePaginator
+    final public function entries(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         $files = $this->logFiles;
         $logString = '';

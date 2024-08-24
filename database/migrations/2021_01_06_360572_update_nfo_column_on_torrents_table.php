@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('torrents', function (Blueprint $table): void {
-            $table->binary('nfo')->nullable()->change();
+            $table->binary('nfo')->change();
         });
     }
 };

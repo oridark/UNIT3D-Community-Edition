@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -45,7 +42,7 @@ class EmailUpdate extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{created_at: 'datetime', deleted_at: 'datetime'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -58,7 +55,7 @@ class EmailUpdate extends Model
     /**
      * Belongs to a user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -17,7 +17,6 @@
         <div class="random__media">
             @foreach ($movies as $key => $movie)
                 <a
-                    target="_blank"
                     href="{{ route('torrents.similar', ['category_id' => 1, 'tmdb' => $movie->id]) }}"
                     class="@if ($loop->iteration == 1) media @elseif ($loop->iteration == 2)media1 @else media2 @endif"
                     style="
@@ -36,7 +35,6 @@
 
             @foreach ($tvs as $key => $tv)
                 <a
-                    target="_blank"
                     href="{{ route('torrents.similar', ['category_id' => 2, 'tmdb' => $tv->id]) }}"
                     class="@if ($loop->iteration == 1) media3 @elseif ($loop->iteration == 2) media4 @else media5 @endif"
                     style="
@@ -55,7 +53,6 @@
 
             @foreach ($movies2 as $key => $movie)
                 <a
-                    target="_blank"
                     href="{{ route('torrents.similar', ['category_id' => 1, 'tmdb' => $movie->id]) }}"
                     class="@if ($loop->iteration == 1) media6 @elseif ($loop->iteration == 2) media7 @else media8 @endif"
                     style="

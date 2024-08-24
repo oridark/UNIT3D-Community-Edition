@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -62,10 +59,10 @@ class WarningLogSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Warning>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Warning>
      */
     #[Computed]
-    final public function warnings(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function warnings(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Warning::query()
             ->with(['warneduser.group', 'staffuser.group', 'torrenttitle'])

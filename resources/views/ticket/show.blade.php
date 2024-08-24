@@ -41,9 +41,7 @@
                                 <td>
                                     <x-user_tag :anon="false" :user="$note->user" />
                                 </td>
-                                <td style="white-space: pre-wrap">
-                                    @joypixels($note->getMessageHtml())
-                                </td>
+                                <td style="white-space: pre-wrap">{{ $note->message }}</td>
                                 <td>
                                     <time
                                         datetime="{{ $note->created_at }}"
@@ -91,56 +89,41 @@
     <section class="panelV2">
         <h2 class="panel__heading">{{ __('common.info') }}</h2>
         <dl class="key-value">
-            <div class="key-value__group">
-                <dt>ID</dt>
-                <dd>{{ $ticket->id }}</dd>
-            </div>
-            <div class="key-value__group">
-                <dt>{{ __('common.created_at') }}</dt>
-                <dd>{{ $ticket->created_at->format('Y-m-d') }}</dd>
-            </div>
-            <div class="key-value__group">
-                <dt>{{ __('ticket.opened-by') }}</dt>
-                <dd>
-                    <x-user_tag :user="$ticket->user" :anon="false" />
-                </dd>
-            </div>
-            <div class="key-value__group">
-                <dt>{{ __('ticket.category') }}</dt>
-                <dd>{{ $ticket->category->name }}</dd>
-            </div>
-            <div class="key-value__group">
-                <dt>{{ __('ticket.priority') }}</dt>
-                <dd>
-                    @switch($ticket->priority->name)
-                        @case('Low')
-                            <i class="fas fa-circle text-yellow"></i>
+            <dt>ID</dt>
+            <dd>{{ $ticket->id }}</dd>
+            <dt>{{ __('common.created_at') }}</dt>
+            <dd>{{ $ticket->created_at->format('Y-m-d') }}</dd>
+            <dt>{{ __('ticket.opened-by') }}</dt>
+            <dd>
+                <x-user_tag :user="$ticket->user" :anon="false" />
+            </dd>
+            <dt>{{ __('ticket.category') }}</dt>
+            <dd>{{ $ticket->category->name }}</dd>
+            <dt>{{ __('ticket.priority') }}</dt>
+            <dd>
+                @switch($ticket->priority->name)
+                    @case('Low')
+                        <i class="fas fa-circle text-yellow"></i>
 
-                            @break
-                        @case('Medium')
-                            <i class="fas fa-circle text-orange"></i>
+                        @break
+                    @case('Medium')
+                        <i class="fas fa-circle text-orange"></i>
 
-                            @break
-                        @case('High')
-                            <i class="fas fa-circle text-red"></i>
+                        @break
+                    @case('High')
+                        <i class="fas fa-circle text-red"></i>
 
-                            @break
-                    @endswitch
-                    {{ $ticket->priority->name }}
-                </dd>
-            </div>
+                        @break
+                @endswitch
+                {{ $ticket->priority->name }}
+            </dd>
             @if ($ticket->closed_at !== null)
-                <div class="key-value__group">
-                    <dt>{{ __('ticket.closed') }}</dt>
-                    <dd>
-                        <time
-                            datetime="{{ $ticket->closed_at }}"
-                            title="{{ $ticket->closed_at }}"
-                        >
-                            {{ $ticket->closed_at->format('m/d/Y') }}
-                        </time>
-                    </dd>
-                </div>
+                <dt>{{ __('ticket.closed') }}</dt>
+                <dd>
+                    <time datetime="{{ $ticket->closed_at }}" title="{{ $ticket->closed_at }}">
+                        {{ $ticket->closed_at->format('m/d/Y') }}
+                    </time>
+                </dd>
             @endif
         </dl>
     </section>

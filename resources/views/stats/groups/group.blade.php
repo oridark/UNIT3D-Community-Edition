@@ -37,10 +37,7 @@
                     @foreach ($users as $user)
                         <tr>
                             <td>
-                                <x-user_tag
-                                    :user="$user"
-                                    :anon="$user->privacy?->private_profile"
-                                />
+                                <x-user_tag :user="$user" :anon="$user->private_profile" />
                             </td>
                             <td>
                                 <time

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,9 +13,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
-use App\Models\Conversation;
 use App\Models\PrivateMessage;
-use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -44,20 +39,11 @@ class ProcessMassPM implements ShouldQueue
      */
     public function handle(): void
     {
-        $conversation = Conversation::create(['subject' => $this->subject]);
-
-        if ($this->senderId !== User::SYSTEM_USER_ID) {
-            $conversation->users()->sync([$this->senderId => ['read' => true]]);
-        }
-
-        if ($this->receiverId !== User::SYSTEM_USER_ID) {
-            $conversation->users()->sync([$this->receiverId]);
-        }
-
-        PrivateMessage::create([
-            'conversation_id' => $conversation->id,
-            'sender_id'       => $this->senderId,
-            'message'         => $this->message
-        ]);
+        $privateMessage = new PrivateMessage();
+        $privateMessage->sender_id = $this->senderId;
+        $privateMessage->receiver_id = $this->receiverId;
+        $privateMessage->subject = $this->subject;
+        $privateMessage->message = $this->message;
+        $privateMessage->save();
     }
 }

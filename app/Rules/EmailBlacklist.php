@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,6 +13,7 @@ declare(strict_types=1);
 
 namespace App\Rules;
 
+use App\Helpers\EmailBlacklistUpdater;
 use Illuminate\Support\Str;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -24,8 +22,6 @@ class EmailBlacklist implements ValidationRule
 {
     /**
      * Array of blacklisted domains.
-     *
-     * @var array<string>
      */
     private array $domains = [];
 
@@ -35,8 +31,7 @@ class EmailBlacklist implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // Load blacklisted domains
-        $this->domains = cache()->get(config('email-blacklist.cache-key'));
-        $this->appendCustomDomains();
+        $this->refresh();
 
         // Extract domain from supplied email address
         $domain = Str::after(strtolower((string) $value), '@');
@@ -44,6 +39,28 @@ class EmailBlacklist implements ValidationRule
         // Run validation check
         if (\in_array($domain, $this->domains)) {
             $fail('Email domain is not allowed. Throwaway email providers are blacklisted.');
+        }
+    }
+
+    /**
+     * Retrive the latest selection of blacklisted domains and cache them.
+     */
+    public function refresh(): void
+    {
+        $this->shouldUpdate();
+        $this->domains = cache()->get(config('email-blacklist.cache-key'));
+        $this->appendCustomDomains();
+    }
+
+    /**
+     * Should update blacklist?.
+     */
+    protected function shouldUpdate(): void
+    {
+        $autoupdate = config('email-blacklist.auto-update');
+
+        if ($autoupdate && !cache()->has(config('email-blacklist.cache-key'))) {
+            EmailBlacklistUpdater::update();
         }
     }
 

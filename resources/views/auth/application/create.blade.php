@@ -58,12 +58,7 @@
                             <label for="type" class="auth-form__label">
                                 {{ __('auth.are-you') }}
                             </label>
-                            <select
-                                id="type"
-                                class="auth-form__select"
-                                name="application[type]"
-                                required
-                            >
+                            <select id="type" class="auth-form__select" name="type" required>
                                 <option class="auth-form__option" value="New To The Game" selected>
                                     {{ __('auth.newbie') }}
                                 </option>
@@ -83,7 +78,7 @@
                                 id="email"
                                 type="email"
                                 class="auth-form__text-input"
-                                name="application[email]"
+                                name="email"
                                 required
                             />
                         </p>
@@ -95,7 +90,7 @@
                                 id="referrer"
                                 type="referrer"
                                 class="auth-form__textarea"
-                                name="application[referrer]"
+                                name="referrer"
                                 required
                             ></textarea>
                         </p>
@@ -113,7 +108,7 @@
                                     <input
                                         x-bind:id="'image' + proof"
                                         class="auth-form__text-input"
-                                        x-bind:name="'images[' + proof + '][image]'"
+                                        name="images[]"
                                         type="url"
                                         placeholder=" "
                                         required
@@ -129,7 +124,7 @@
                                     <input
                                         x-bind:id="'profile' + proof"
                                         class="auth-form__text-input"
-                                        x-bind:name="'links[' + proof + '][url]'"
+                                        name="links[]"
                                         type="url"
                                         placeholder=" "
                                     />

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,7 +31,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Collection extends Model
 {
-    /** @use HasFactory<\Database\Factories\CollectionFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -42,7 +38,7 @@ class Collection extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Comment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Comment>
      */
     public function comments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
@@ -50,7 +46,7 @@ class Collection extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function movie(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * NOTICE OF LICENSE.
  *
@@ -122,7 +120,7 @@ return [
      */
 
     'hsts' => [
-        'enable' => env('HSTS_ENABLED', true),
+        'enable' => true,
 
         'max-age' => 31536000,
 
@@ -478,7 +476,10 @@ return [
         // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src
         'child-src' => [
             'allow' => [
-                'https://www.youtube-nocookie.com/embed/'
+                'https://www.youtube-nocookie.com/embed/',
+                'https://mxrc.tech/torrents/create',
+                'https://mxrc.tech/torrents',
+                'https://mxrc.tech/torrents/download_check/*'
             ],
         ],
 
@@ -490,6 +491,7 @@ return [
                 'https://'.parse_url(env('APP_URL'), PHP_URL_HOST).':8443/socket.io/',
                 'wss://'.parse_url(env('APP_URL'), PHP_URL_HOST).':8443/socket.io/',
                 'https://api.themoviedb.org/',
+                'https://192.168.0.235/',
             ],
         ],
 

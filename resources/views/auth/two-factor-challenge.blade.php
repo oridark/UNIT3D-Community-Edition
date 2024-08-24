@@ -6,10 +6,21 @@
         <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" type="image/x-icon" />
         <link rel="icon" href="{{ url('/favicon.ico') }}" type="image/x-icon" />
         @vite('resources/sass/pages/_auth.scss')
+        <style>
+            html{
+                height: 100%;
+            }
+        </style>
     </head>
     <body>
-        <main x-data="{ recovery: false, entered: false }">
-            <section class="auth-form">
+        <main x-data="{ recovery: false }">
+            <div class="branding">
+                <a class="auth-form__branding" href="{{ route('home.index') }}">
+                    <i class="fal fa-tv-retro"></i>
+                    <span class="auth-form__site-logo">{{ \config('other.title') }}</span>
+                </a>
+            </div>
+            <section class="auth-form twofa">
                 <header class="auth-form__header">
                     <button
                         class="auth-form__header-item"
@@ -39,11 +50,12 @@
                     method="POST"
                     action="{{ route('two-factor.login') }}"
                 >
-                    @csrf
+                    <!-- @csrf
                     <a class="auth-form__branding" href="{{ route('home.index') }}">
                         <i class="fal fa-tv-retro"></i>
                         <span class="auth-form__site-logo">{{ \config('other.title') }}</span>
-                    </a>
+                    </a> -->
+                    @csrf
                     <ul class="auth-form__important-infos">
                         <li class="auth-form__important-info" x-show="!recovery">
                             {{ __('auth.enter-totp') }}
@@ -69,9 +81,9 @@
                             </li>
                         @endif
                     </ul>
-                    <p class="auth-form__text-input-group" x-show="! recovery">
+                    <p class="auth-form__text-input-group auth-form__group" x-show="! recovery">
                         <label class="auth-form__label" for="code">
-                            {{ __('auth.code') }}
+                            {{ __('auth.totp-code') }}
                         </label>
                         <input
                             id="code"
@@ -86,18 +98,12 @@
                             x-bind:required="!recovery"
                             type="tel"
                             value="{{ old('code') }}"
-                            x-on:input="
-                                if ($el.value.length === 6) {
-                                    $el.form.submit();
-                                    entered = true;
-                                }
-                            "
                             x-ref="code"
                         />
                     </p>
-                    <p class="auth-form__text-input-group" x-cloak x-show="recovery">
+                    <p class="auth-form__text-input-group auth-form__group" x-cloak x-show="recovery">
                         <label class="auth-form__label" for="recovery_code">
-                            {{ __('Use a recovery code') }}
+                            {{ __('auth.recovery-code') }}
                         </label>
                         <input
                             id="recovery_code"
@@ -116,13 +122,9 @@
                         @hiddencaptcha
                     @endif
 
-                    <button
-                        class="auth-form__primary-button"
-                        x-text="entered ? @js(__('auth.verifying')) : @js(__('auth.verify'))"
-                        x-bind:disabled="entered"
-                    >
-                        {{ __('auth.verify') }}
-                    </button>
+                    <div class="auth-form__button">
+                        <button class="auth-form__primary-button">{{ __('auth.login') }}</button>
+                    </div>
                     @if (Session::has('errors'))
                         <ul class="auth-form__errors">
                             @foreach ($errors->all() as $error)

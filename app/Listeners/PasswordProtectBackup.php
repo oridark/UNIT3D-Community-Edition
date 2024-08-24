@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -24,7 +21,7 @@ class PasswordProtectBackup
     /**
      * Handle the event.
      */
-    public function handle(BackupZipWasCreated $backupZipWasCreated): ?string
+    public function handle(BackupZipWasCreated $backupZipWasCreated): string
     {
         return (new BackupPassword($backupZipWasCreated->pathToZip))->path;
     }

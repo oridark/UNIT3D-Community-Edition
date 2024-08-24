@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -28,12 +25,6 @@ use App\Achievements\UserMade800Comments;
 use App\Achievements\UserMade900Comments;
 use App\Achievements\UserMadeComment;
 use App\Achievements\UserMadeTenComments;
-use App\Models\Article;
-use App\Models\Collection;
-use App\Models\Playlist;
-use App\Models\Ticket;
-use App\Models\Torrent;
-use App\Models\TorrentRequest;
 use App\Models\User;
 use App\Notifications\NewComment;
 use App\Notifications\NewCommentTag;
@@ -41,6 +32,7 @@ use App\Repositories\ChatRepository;
 use App\Traits\CastLivewireProperties;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
+use voku\helper\AntiXSS;
 
 class Comment extends Component
 {
@@ -48,28 +40,31 @@ class Comment extends Component
 
     protected ChatRepository $chatRepository;
 
-    public null|Article|Collection|Playlist|Ticket|Torrent|TorrentRequest $model;
-
-    public \App\Models\Comment $comment;
+    public $comment;
 
     public bool $anon = false;
 
     public ?User $user;
 
-    /**
-     * @var array<string, string>
-     */
     protected $listeners = [
         'refresh' => '$refresh',
     ];
 
-    public bool $isReplying = false;
+    protected $validationAttributes = [
+        'replyState.content' => 'reply',
+    ];
 
-    public string $replyState = '';
+    public $isReplying = false;
 
-    public bool $isEditing = false;
+    public $replyState = [
+        'content' => '',
+    ];
 
-    public string $editState = '';
+    public $isEditing = false;
+
+    public $editState = [
+        'content' => '',
+    ];
 
     final public function boot(ChatRepository $chatRepository): void
     {
@@ -86,94 +81,93 @@ class Comment extends Component
         $this->castLivewireProperties($field, $value);
     }
 
-    /**
-     * @return list<string>
-     */
     final public function taggedUsers(): array
     {
-        preg_match_all('/@([\w\-]+)/', $this->editState, $matches);
+        preg_match_all('/@([\w\-]+)/', implode('', $this->editState), $matches);
 
         return $matches[1];
     }
 
-    final public function updatedIsEditing(bool $isEditing): void
+    final public function updatedIsEditing($isEditing): void
     {
         if (!$isEditing) {
             return;
         }
 
-        $this->editState = $this->comment->content;
+        $this->editState = [
+            'content' => $this->comment->content,
+        ];
     }
 
     final public function editComment(): void
     {
-        abort_unless(auth()->id() === $this->comment->user_id || auth()->user()->group->is_modo, 403);
-
-        $this->validate([
-            'editState' => 'required'
-        ]);
-
-        $this->comment->update([
-            'content' => $this->editState,
-        ]);
-
-        $this->isEditing = false;
+        if (auth()->id() == $this->comment->user_id || auth()->user()->group->is_modo) {
+            $this->comment->update((new AntiXSS())->xss_clean($this->editState));
+            $this->isEditing = false;
+        } else {
+            $this->dispatch('error', type: 'error', message: 'Permission Denied!');
+        }
     }
 
     final public function deleteComment(): void
     {
-        abort_unless((auth()->id() === $this->comment->user_id || auth()->user()->group->is_modo), 403, 'Permission Denied!');
-
-        abort_if($this->comment->children()->exists(), 403);
-
-        $this->comment->delete();
+        if ((auth()->id() == $this->comment->user_id || auth()->user()->group->is_modo) && $this->comment->children()->doesntExist()) {
+            $this->comment->delete();
+            $this->dispatch('refresh');
+        } else {
+            $this->dispatch('error', type: 'error', message: 'Permission Denied!');
+        }
     }
 
     final public function postReply(): void
     {
-        abort_unless($this->model instanceof Ticket || (auth()->user()->can_comment ?? auth()->user()->group->can_comment), 403, __('comment.rights-revoked'));
+        // Set Polymorphic Model Name
+        $modelName = str()->snake(class_basename($this->comment->commentable_type), ' ');
 
-        abort_if($this->model instanceof Torrent && $this->model->status !== Torrent::APPROVED, 403, __('comment.torrent-status'));
+        if ($modelName !== 'ticket' && auth()->user()->can_comment === false) {
+            $this->dispatch('error', type: 'error', message: __('comment.rights-revoked'));
 
-        abort_if($this->comment->isChild(), 403);
+            return;
+        }
+
+        if (!$this->comment->isParent()) {
+            return;
+        }
 
         $this->validate([
-            'replyState' => 'required',
-            'anon'       => 'bool',
+            'replyState.content' => 'required',
         ]);
 
-        $reply = $this->comment->children()->create([
-            'content'          => $this->replyState,
-            'user_id'          => auth()->id(),
-            'anon'             => $this->anon,
-            'commentable_id'   => $this->model->id,
-            'commentable_type' => \get_class($this->model),
-        ]);
+        $reply = $this->comment->children()->make((new AntiXSS())->xss_clean($this->replyState));
+        $reply->user()->associate(auth()->user());
+        $reply->commentable()->associate($this->comment->commentable);
+        $reply->anon = $this->anon;
+        $reply->save();
 
         // New Comment Notification
-        switch (true) {
-            case $this->model instanceof Ticket:
-                $ticket = $this->model;
+        switch ($modelName) {
+            case 'ticket':
+                $ticket = $this->comment->commentable;
 
                 if ($this->user->id !== $ticket->staff_id && $ticket->staff_id !== null) {
-                    User::find($ticket->staff_id)->notify(new NewComment($this->model, $reply));
+                    User::find($ticket->staff_id)->notify(new NewComment($modelName, $reply));
                 }
 
                 if ($this->user->id !== $ticket->user_id) {
-                    User::find($ticket->user_id)->notify(new NewComment($this->model, $reply));
+                    User::find($ticket->user_id)->notify(new NewComment($modelName, $reply));
                 }
 
                 if (!\in_array($this->comment->user_id, [$ticket->staff_id, $ticket->user_id, $this->user->id])) {
-                    User::find($this->comment->user_id)->notify(new NewComment($this->model, $reply));
+                    User::find($this->comment->user_id)->notify(new NewComment($modelName, $reply));
                 }
 
                 break;
-            case $this->model instanceof Article:
-            case $this->model instanceof Playlist:
-            case $this->model instanceof TorrentRequest:
-            case $this->model instanceof Torrent:
-                if ($this->user->id !== $this->model->user_id) {
-                    User::find($this->model->user_id)?->notify(new NewComment($this->model, $reply));
+            case 'article':
+            case 'playlist':
+            case 'torrent request':
+            case 'torrent':
+                if ($this->user->id !== $this->comment->user_id) {
+                    User::find($this->comment->user_id)->notify(new NewComment($modelName, $reply));
                 }
 
                 break;
@@ -181,53 +175,63 @@ class Comment extends Component
 
         // User Tagged Notification
         $users = User::whereIn('username', $this->taggedUsers())->get();
-        Notification::sendNow($users, new NewCommentTag($this->model, $reply));
+        Notification::sendNow($users, new NewCommentTag($modelName, $reply));
 
-        if (!$this->model instanceof Ticket) {
-            // Auto Shout
-            $username = $reply->anon ? 'An anonymous user' : '[url='.href_profile($this->user).']'.$this->user->username.'[/url]';
+        // Auto Shout
+        $profileUrl = href_profile($this->user);
 
-            switch (true) {
-                case $this->model instanceof Article:
-                    $this->chatRepository->systemMessage($username.' has left a comment on Article [url='.href_article($this->model).']'.$this->model->title.'[/url]');
+        $modelUrl = match ($modelName) {
+            'article'         => href_article($this->comment->commentable),
+            'collection'      => href_collection($this->comment->commentable),
+            'playlist'        => href_playlist($this->comment->commentable),
+            'torrent request' => href_request($this->comment->commentable),
+            'torrent'         => href_torrent($this->comment->commentable),
+            default           => "#"
+        };
 
-                    break;
-                case $this->model instanceof Collection:
-                    $this->chatRepository->systemMessage($username.' has left a comment on Collection [url='.href_collection($this->model).']'.$this->model->name.'[/url]');
-
-                    break;
-                case $this->model instanceof Playlist:
-                    $this->chatRepository->systemMessage($username.' has left a comment on Playlist [url='.href_playlist($this->model).']'.$this->model->name.'[/url]');
-
-                    break;
-                case $this->model instanceof TorrentRequest:
-                    $this->chatRepository->systemMessage($username.' has left a comment on Torrent Request [url='.href_request($this->model).']'.$this->model->name.'[/url]');
-
-                    break;
-                case $this->model instanceof Torrent:
-                    $this->chatRepository->systemMessage($username.' has left a comment on Torrent [url='.href_torrent($this->model).']'.$this->model->name.'[/url]');
-
-                    break;
-            }
-
-            // Achievements
-            if (!$reply->anon) {
-                $this->user->unlock(new UserMadeComment());
-                $this->user->addProgress(new UserMadeTenComments(), 1);
-                $this->user->addProgress(new UserMade50Comments(), 1);
-                $this->user->addProgress(new UserMade100Comments(), 1);
-                $this->user->addProgress(new UserMade200Comments(), 1);
-                $this->user->addProgress(new UserMade300Comments(), 1);
-                $this->user->addProgress(new UserMade400Comments(), 1);
-                $this->user->addProgress(new UserMade500Comments(), 1);
-                $this->user->addProgress(new UserMade600Comments(), 1);
-                $this->user->addProgress(new UserMade700Comments(), 1);
-                $this->user->addProgress(new UserMade800Comments(), 1);
-                $this->user->addProgress(new UserMade900Comments(), 1);
+        if ($modelName !== 'ticket') {
+            if ($reply->anon == 0) {
+                $this->chatRepository->systemMessage(
+                    sprintf(
+                        '[url=%s]%s[/url] has left a comment on '.$modelName.' [url=%s]%s[/url]',
+                        $profileUrl,
+                        $this->user->username,
+                        $modelUrl,
+                        $this->comment->commentable->name ?? $this->comment->commentable->title
+                    )
+                );
+            } else {
+                $this->chatRepository->systemMessage(
+                    sprintf(
+                        'An anonymous user has left a comment on '.$modelName.' [url=%s]%s[/url]',
+                        $modelUrl,
+                        $this->comment->commentable->name ?? $this->comment->commentable->title
+                    )
+                );
             }
         }
 
-        $this->reset('replyState', 'isReplying');
+        // Achievements
+        if ($reply->anon == 0 && $modelName !== 'ticket') {
+            $this->user->unlock(new UserMadeComment());
+            $this->user->addProgress(new UserMadeTenComments(), 1);
+            $this->user->addProgress(new UserMade50Comments(), 1);
+            $this->user->addProgress(new UserMade100Comments(), 1);
+            $this->user->addProgress(new UserMade200Comments(), 1);
+            $this->user->addProgress(new UserMade300Comments(), 1);
+            $this->user->addProgress(new UserMade400Comments(), 1);
+            $this->user->addProgress(new UserMade500Comments(), 1);
+            $this->user->addProgress(new UserMade600Comments(), 1);
+            $this->user->addProgress(new UserMade700Comments(), 1);
+            $this->user->addProgress(new UserMade800Comments(), 1);
+            $this->user->addProgress(new UserMade900Comments(), 1);
+        }
+
+        $this->replyState = [
+            'content' => '',
+        ];
+
+        $this->isReplying = false;
 
         $this->dispatch('refresh')->self();
     }

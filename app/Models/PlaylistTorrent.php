@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -32,8 +29,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class PlaylistTorrent extends Pivot
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\PlaylistTorrentFactory> */
     use HasFactory;
 
     /**
@@ -62,7 +57,7 @@ class PlaylistTorrent extends Pivot
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -72,7 +67,7 @@ class PlaylistTorrent extends Pivot
     /**
      * Belongs To A Playlist.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Playlist, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Playlist, self>
      */
     public function playlist(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

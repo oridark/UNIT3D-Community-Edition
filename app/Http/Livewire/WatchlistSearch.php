@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -55,10 +52,10 @@ class WatchlistSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Watchlist>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<\App\Models\User>
      */
     #[Computed]
-    final public function users(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function users(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Watchlist::query()
             ->with(['user.group', 'author.group'])

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -27,7 +25,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'UNIT3D',
+    'name' => 'Movie Collection',
 
     /*
     |--------------------------------------------------------------------------
@@ -94,7 +92,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zh-CN',
 
     /*
     |--------------------------------------------------------------------------
@@ -131,10 +129,9 @@ return [
     |
     */
 
-    'meta_locale' => 'en_US',
+    'meta_locale' => 'zh-CN',
 
     /*
-    |--------------------------------------------------------------------------
     | Encryption Key
     |--------------------------------------------------------------------------
     |

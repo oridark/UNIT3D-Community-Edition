@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,14 +22,14 @@ return new class () extends Migration {
     public function up(): void
     {
         Schema::table('user_echoes', function (Blueprint $table): void {
-            $table->integer('room_id')->nullable()->change();
-            $table->integer('bot_id')->nullable()->change();
-            $table->integer('target_id')->nullable()->change();
+            $table->integer('room_id')->change();
+            $table->integer('bot_id')->change();
+            $table->integer('target_id')->change();
         });
         Schema::table('user_audibles', function (Blueprint $table): void {
-            $table->integer('room_id')->nullable()->change();
-            $table->integer('bot_id')->nullable()->change();
-            $table->integer('target_id')->nullable()->change();
+            $table->integer('room_id')->change();
+            $table->integer('bot_id')->change();
+            $table->integer('target_id')->change();
         });
     }
 };

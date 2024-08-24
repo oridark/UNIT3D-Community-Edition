@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -40,7 +37,7 @@ class InternalUser extends Pivot
     /**
      * Belongs to a user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -50,7 +47,7 @@ class InternalUser extends Pivot
     /**
      * Belongs to an internal.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Internal, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Internal, self>
      */
     public function internal(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

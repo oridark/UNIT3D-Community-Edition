@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -47,14 +44,14 @@ class ApprovedRequestFillController extends Controller
         abort_unless(($request->user()->id === $torrentRequest->user_id || $request->user()->group->is_modo) && $torrentRequest->approved_by === null, 403);
 
         $approver = $request->user();
-        $filler = $torrentRequest->filler()->sole();
+        $filler = $torrentRequest->filler;
 
         $torrentRequest->update([
             'approved_by'   => $approver->id,
             'approved_when' => Carbon::now(),
         ]);
 
-        $filler->increment('seedbonus', (float) $torrentRequest->bounty);
+        $filler->increment('seedbonus', $torrentRequest->bounty);
 
         // Achievements
         if (!$torrentRequest->filled_anon) {
@@ -67,11 +64,11 @@ class ApprovedRequestFillController extends Controller
         // Auto Shout
         if ($torrentRequest->filled_anon) {
             $this->chatRepository->systemMessage(
-                \sprintf('An anonymous user has filled request, [url=%s]%s[/url]', href_request($torrentRequest), $torrentRequest->name)
+                sprintf('An anonymous user has filled request, [url=%s]%s[/url]', href_request($torrentRequest), $torrentRequest->name)
             );
         } else {
             $this->chatRepository->systemMessage(
-                \sprintf('[url=%s]%s[/url] has filled request, [url=%s]%s[/url]', href_profile($filler), $filler->username, href_request($torrentRequest), $torrentRequest->name)
+                sprintf('[url=%s]%s[/url] has filled request, [url=%s]%s[/url]', href_profile($filler), $filler->username, href_request($torrentRequest), $torrentRequest->name)
             );
         }
 
@@ -80,7 +77,7 @@ class ApprovedRequestFillController extends Controller
         }
 
         return to_route('requests.show', ['torrentRequest' => $torrentRequest])
-            ->withSuccess(\sprintf(trans('request.approved-user'), $torrentRequest->name, $torrentRequest->filled_anon ? 'Anonymous' : $filler->username));
+            ->withSuccess(sprintf(trans('request.approved-user'), $torrentRequest->name, $torrentRequest->filled_anon ? 'Anonymous' : $filler->username));
     }
 
     /**
@@ -88,7 +85,7 @@ class ApprovedRequestFillController extends Controller
      */
     public function destroy(Request $request, TorrentRequest $torrentRequest): \Illuminate\Http\RedirectResponse
     {
-        abort_unless((bool) $request->user()->group->is_modo, 403);
+        abort_unless($request->user()->group->is_modo, 403);
 
         $filler = $torrentRequest->filler;
 
@@ -98,9 +95,9 @@ class ApprovedRequestFillController extends Controller
         ]);
 
         // TODO: Change database column to signed from unsigned to handle negative bon.
-        $refunded = min($torrentRequest->bounty, (float) $filler->seedbonus);
+        $refunded = min($torrentRequest->bounty, $filler->seedbonus);
 
-        $filler->decrement('seedbonus', (float) $refunded);
+        $filler->decrement('seedbonus', $refunded);
 
         return to_route('requests.show', ['torrentRequest' => $torrentRequest])
             ->withSuccess(trans('request.request-reset'));

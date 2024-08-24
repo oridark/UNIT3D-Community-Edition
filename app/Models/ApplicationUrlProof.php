@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -32,14 +29,12 @@ use Illuminate\Database\Eloquent\Model;
 class ApplicationUrlProof extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\ApplicationUrlProofFactory> */
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * The Attributes That Are Mass Assignable.
      *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $fillable = [
         'application_id',
@@ -49,7 +44,7 @@ class ApplicationUrlProof extends Model
     /**
      * Belongs To A Application.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Application, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Application, self>
      */
     public function application(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

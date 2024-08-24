@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -61,16 +58,16 @@ return new class () extends Migration {
         });
 
         Schema::table('recommendations', function (Blueprint $table): void {
-            $table->unsignedInteger('movie_id')->nullable()->change();
+            $table->unsignedInteger('movie_id')->change();
             $table->foreign('movie_id')->references('id')->on('movie')->cascadeOnUpdate()->cascadeOnDelete();
 
-            $table->unsignedInteger('recommendation_movie_id')->nullable()->change();
+            $table->unsignedInteger('recommendation_movie_id')->change();
             $table->foreign('recommendation_movie_id')->references('id')->on('movie')->cascadeOnUpdate()->cascadeOnDelete();
 
-            $table->unsignedInteger('tv_id')->nullable()->change();
+            $table->unsignedInteger('tv_id')->change();
             $table->foreign('tv_id')->references('id')->on('tv')->cascadeOnUpdate()->cascadeOnDelete();
 
-            $table->unsignedInteger('recommendation_tv_id')->nullable()->change();
+            $table->unsignedInteger('recommendation_tv_id')->change();
             $table->foreign('recommendation_tv_id')->references('id')->on('tv')->cascadeOnUpdate()->cascadeOnDelete();
         });
 

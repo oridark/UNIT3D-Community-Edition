@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -21,8 +18,10 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Exception;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
+/**
+ * @see \Tests\Unit\Console\Commands\AutoCorrectHistoryTest
+ */
 class AutoCorrectHistory extends Command
 {
     /**
@@ -42,11 +41,11 @@ class AutoCorrectHistory extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
-        History::query()
+        History::select(['id', 'active', 'updated_at'])
             ->where('active', '=', 1)
             ->where('updated_at', '<', Carbon::now()->subHours(2)->toDateTimeString())
             ->update([

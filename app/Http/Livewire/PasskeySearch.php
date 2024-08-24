@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property \Illuminate\Pagination\LengthAwarePaginator<Passkey> $passkeys
+ * @property \Illuminate\Contracts\Pagination\LengthAwarePaginator<Passkey> $passkeys
  */
 class PasskeySearch extends Component
 {
@@ -50,10 +47,10 @@ class PasskeySearch extends Component
     public int $perPage = 25;
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Passkey>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Passkey>
      */
     #[Computed]
-    final public function passkeys(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function passkeys(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Passkey::with([
             'user' => fn ($query) => $query->withTrashed()->with('group'),

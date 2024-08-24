@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -17,11 +14,12 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Audit;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Throwable;
 
+/**
+ * @see \Tests\Unit\Console\Commands\AutoRecycleAuditsTest
+ */
 class AutoRecycleAudits extends Command
 {
     /**
@@ -29,21 +27,19 @@ class AutoRecycleAudits extends Command
      *
      * @var string
      */
-    protected $signature = 'auto:recycle_audits';
+    protected $signature = 'auto:recycle_activity_log';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Recycle Audits Once X Days Old.';
+    protected $description = 'Recycle Activity From Log Once 30 Days Old.';
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
      */
-    final public function handle(): void
+    public function handle(): void
     {
         $current = Carbon::now();
         $audits = Audit::where('created_at', '<', $current->copy()->subDays(config('audit.recycle'))->toDateTimeString())->get();
@@ -52,6 +48,6 @@ class AutoRecycleAudits extends Command
             $audit->delete();
         }
 
-        $this->comment('Automated Audit Recycle Command Complete');
+        $this->comment('Automated Purge Old Audits Command Complete');
     }
 }

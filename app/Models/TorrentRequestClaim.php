@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,8 +31,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TorrentRequestClaim extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\TorrentRequestClaimFactory> */
     use HasFactory;
 
     /**
@@ -55,7 +50,7 @@ class TorrentRequestClaim extends Model
     /**
      * Belongs To A User.
      *
-     * @return BelongsTo<User, $this>
+     * @return BelongsTo<User, self>
      */
     public function user(): BelongsTo
     {
@@ -63,7 +58,7 @@ class TorrentRequestClaim extends Model
     }
 
     /**
-     * @return BelongsTo<TorrentRequest, $this>
+     * @return BelongsTo<TorrentRequest, self>
      */
     public function request(): BelongsTo
     {

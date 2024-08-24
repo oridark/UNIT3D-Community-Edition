@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -38,8 +35,6 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
 
     /**
@@ -52,15 +47,15 @@ class Category extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{music_meta: 'bool', game_meta: 'bool', tv_meta: 'bool', movie_meta: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'music_meta' => 'bool',
-            'game_meta'  => 'bool',
-            'tv_meta'    => 'bool',
-            'movie_meta' => 'bool',
+            'music_meta' => 'boolean',
+            'game_meta'  => 'boolean',
+            'tv_meta'    => 'boolean',
+            'movie_meta' => 'boolean',
         ];
     }
 
@@ -74,7 +69,7 @@ class Category extends Model
     /**
      * Has Many Torrents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent>
      */
     public function torrents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -84,7 +79,7 @@ class Category extends Model
     /**
      * Has Many Requests.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest>
      */
     public function requests(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

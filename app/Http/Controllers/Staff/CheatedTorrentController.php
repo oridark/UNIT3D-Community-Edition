@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -57,13 +54,7 @@ class CheatedTorrentController extends Controller
                     'torrents.created_at',
                 ])
                 ->having('current_balance', '<>', '0')
-                /**
-                 * @phpstan-ignore-next-line
-                 */
                 ->having('last_completed', '<', now()->subHours(2))
-                /**
-                 * @phpstan-ignore-next-line
-                 */
                 ->having('last_started', '<', now()->subHours(2))
                 ->orderByDesc('times_cheated')
                 ->paginate(25),

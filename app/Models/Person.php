@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -41,7 +38,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Person extends Model
 {
-    /** @use HasFactory<\Database\Factories\PersonFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -49,7 +45,7 @@ class Person extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Credit, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Credit>
      */
     public function credits(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -57,7 +53,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function tv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -67,7 +63,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function createdTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -78,7 +74,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function directedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -89,7 +85,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function writtenTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -100,7 +96,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function producedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -111,7 +107,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function composedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -122,7 +118,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function cinematographedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -133,7 +129,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function editedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -144,7 +140,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function productionDesignedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -155,7 +151,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function artDirectedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -166,7 +162,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function actedTv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -177,7 +173,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function movie(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -187,7 +183,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function directedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -198,7 +194,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function writtenMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -209,7 +205,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function producedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -220,7 +216,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function composedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -231,7 +227,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function cinematographedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -242,7 +238,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function editedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -253,7 +249,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function productionDesignedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -264,7 +260,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function artDirectedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -275,7 +271,7 @@ class Person extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function actedMovies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

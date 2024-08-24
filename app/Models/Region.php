@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -30,8 +27,6 @@ use Illuminate\Database\Eloquent\Model;
 class Region extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\RegionFactory> */
     use HasFactory;
 
     /**
@@ -51,7 +46,7 @@ class Region extends Model
     /**
      * Has Many Torrents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent>
      */
     public function torrents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -61,7 +56,7 @@ class Region extends Model
     /**
      * Has Many Torrent Requests.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest>
      */
     public function requests(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

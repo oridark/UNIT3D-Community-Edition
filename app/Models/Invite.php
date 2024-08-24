@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -39,8 +36,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Invite extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\InviteFactory> */
     use HasFactory;
     use SoftDeletes;
 
@@ -49,7 +44,7 @@ class Invite extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function sender(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -62,7 +57,7 @@ class Invite extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function receiver(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

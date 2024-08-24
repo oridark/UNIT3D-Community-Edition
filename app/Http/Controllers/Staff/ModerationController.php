@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -19,7 +16,6 @@ namespace App\Http\Controllers\Staff;
 use App\Helpers\TorrentHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\UpdateModerationRequest;
-use App\Models\Conversation;
 use App\Models\PrivateMessage;
 use App\Models\Scopes\ApprovedScope;
 use App\Models\Torrent;
@@ -94,11 +90,11 @@ class ModerationController extends Controller
                 // Announce To Shoutbox
                 if ($torrent->anon === 0) {
                     $this->chatRepository->systemMessage(
-                        \sprintf('User [url=%s/users/', config('app.url')).$torrent->user->username.']'.$torrent->user->username.\sprintf('[/url] has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', config('app.url')).$id.']'.$torrent->name.'[/url], grab it now!'
+                        sprintf('User [url=%s/users/', config('app.url')).$torrent->user->username.']'.$torrent->user->username.sprintf('[/url] has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', config('app.url')).$id.']'.$torrent->name.'[/url], grab it now!'
                     );
                 } else {
                     $this->chatRepository->systemMessage(
-                        \sprintf('An anonymous user has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', config('app.url')).$id.']'.$torrent->name.'[/url], grab it now!'
+                        sprintf('An anonymous user has uploaded a new '.$torrent->category->name.'. [url=%s/torrents/', config('app.url')).$id.']'.$torrent->name.'[/url], grab it now!'
                     );
                 }
 
@@ -114,14 +110,11 @@ class ModerationController extends Controller
                     'moderated_by' => $staff->id,
                 ]);
 
-                $conversation = Conversation::create(['subject' => 'Your upload, '.$torrent->name.', has been rejected by '.$staff->username]);
-
-                $conversation->users()->sync([$staff->id => ['read' => true], $torrent->user_id]);
-
                 PrivateMessage::create([
-                    'conversation_id' => $conversation->id,
-                    'sender_id'       => $staff->id,
-                    'message'         => "Greetings, \n\nYour upload, [url=/torrents/".$id.']'.$torrent->name."[/url], has been rejected. Please see below the message from the staff member.\n\n[quote=".$staff->username.']'.$request->message.'[/quote]',
+                    'sender_id'   => $staff->id,
+                    'receiver_id' => $torrent->user_id,
+                    'subject'     => 'Your upload, '.$torrent->name.' ,has been rejected by '.$staff->username,
+                    'message'     => "Greetings, \n\nYour upload ".$torrent->name." has been rejected. Please see below the message from the staff member.\n\n".$request->message,
                 ]);
 
                 cache()->forget('announce-torrents:by-infohash:'.$torrent->info_hash);
@@ -138,14 +131,11 @@ class ModerationController extends Controller
                     'moderated_by' => $staff->id,
                 ]);
 
-                $conversation = Conversation::create(['subject' => 'Your upload, '.$torrent->name.', has been postponed by '.$staff->username]);
-
-                $conversation->users()->sync([$staff->id => ['read' => true], $torrent->user_id]);
-
                 PrivateMessage::create([
-                    'conversation_id' => $conversation->id,
-                    'sender_id'       => $staff->id,
-                    'message'         => "Greetings, \n\nYour upload, [url=/torrents/".$id.']'.$torrent->name."[/url], has been postponed. Please see below the message from the staff member.\n\n[quote=".$staff->username.']'.$request->message.'[/quote]',
+                    'sender_id'   => $staff->id,
+                    'receiver_id' => $torrent->user_id,
+                    'subject'     => 'Your upload, '.$torrent->name.' ,has been postponed by '.$staff->username,
+                    'message'     => "Greetings, \n\nYour upload, ".$torrent->name." ,has been postponed. Please see below the message from the staff member.\n\n".$request->message,
                 ]);
 
                 cache()->forget('announce-torrents:by-infohash:'.$torrent->info_hash);

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,8 +31,6 @@ use Illuminate\Database\Eloquent\Model;
 class ForumCategory extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\ForumCategoryFactory> */
     use HasFactory;
 
     /**
@@ -48,7 +43,7 @@ class ForumCategory extends Model
     /**
      * Has Many Sub Topics.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Topic, Forum, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Topic>
      */
     public function topics(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
@@ -58,7 +53,7 @@ class ForumCategory extends Model
     /**
      * Has Many Sub Forums.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Forum, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Forum>
      */
     public function forums(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

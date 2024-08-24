@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -31,13 +28,12 @@ use Illuminate\Database\Eloquent\Model;
  */
 class FailedLoginAttempt extends Model
 {
-    /** @use HasFactory<\Database\Factories\FailedLoginAttemptFactory> */
     use HasFactory;
 
     /**
-     * The attributes that are mass assignable.
+     * The Attributes That Are Mass Assignable.
      *
-     * @var array<int, string>
+     * @var string[]
      */
     protected $fillable = [
         'user_id',
@@ -48,7 +44,7 @@ class FailedLoginAttempt extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

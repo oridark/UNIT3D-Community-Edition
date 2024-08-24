@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,11 +13,10 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Exception;
-use Throwable;
 
 class AutoUpdateUserLastActions extends Command
 {
@@ -41,24 +37,18 @@ class AutoUpdateUserLastActions extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
         $key = config('cache.prefix').':user-last-actions:batch';
-
         $userIdCount = Redis::command('LLEN', [$key]);
-
         $userIds = Redis::command('LPOP', [$key, $userIdCount]);
 
         if ($userIds !== false) {
-            DB::transaction(static function () use ($userIds): void {
-                DB::table('users')
-                    ->whereIntegerInRaw('id', $userIds)
-                    ->update([
-                        'last_action' => now(),
-                    ]);
-            }, 5);
+            User::whereIntegerInRaw('id', $userIds)->update([
+                'last_action' => now(),
+            ]);
         }
 
         $this->comment('Automated upsert histories command complete');

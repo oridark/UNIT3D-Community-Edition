@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -21,11 +18,12 @@ use App\Notifications\UserManualWarningExpire;
 use App\Notifications\UserWarningExpire;
 use App\Services\Unit3dAnnounce;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Throwable;
 
+/**
+ * @see \Tests\Unit\Console\Commands\AutoDeactivateWarningTest
+ */
 class AutoDeactivateWarning extends Command
 {
     /**
@@ -44,10 +42,8 @@ class AutoDeactivateWarning extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
      */
-    final public function handle(): void
+    public function handle(): void
     {
         $current = Carbon::now();
         $warnings = Warning::with(['warneduser', 'torrenttitle'])

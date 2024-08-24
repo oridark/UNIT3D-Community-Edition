@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -17,6 +14,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\PrivateMessage;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,10 +42,12 @@ class RsskeyController extends Controller
             $user->rsskeys()->create(['content' => $user->rsskey]);
 
             if ($changedByStaff) {
-                $user->sendSystemNotification(
-                    subject: 'ATTENTION - Your RSS key has been reset',
-                    message: "Your RSS key has been reset by staff. You will need to update your RSS key in your torrent client to continue receiving new torrents.\n\nFor more information, please create a helpdesk ticket.",
-                );
+                PrivateMessage::create([
+                    'sender_id'   => 1,
+                    'receiver_id' => $user->id,
+                    'subject'     => 'ATTENTION - Your RSS key has been reset',
+                    'message'     => "Your RSS key has been reset by staff. You will need to update your RSS key in your torrent client to continue receiving new torrents.\n\nFor more information, please create a helpdesk ticket.\n\n[color=red][b]THIS IS AN AUTOMATED SYSTEM MESSAGE, PLEASE DO NOT REPLY![/b][/color]",
+                ]);
             }
         });
 

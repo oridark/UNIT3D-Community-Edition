@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,7 +31,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Season extends Model
 {
-    /** @use HasFactory<\Database\Factories\SeasonFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -44,7 +40,7 @@ class Season extends Model
     /**
      * Has Many Torrents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Torrent>
      */
     public function torrents(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -54,7 +50,7 @@ class Season extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Tv, self>
      */
     public function tv(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -62,7 +58,7 @@ class Season extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Episode, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Episode>
      */
     public function episodes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -33,7 +30,7 @@ class StoreSubtitleRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<Closure(string, mixed, Closure(string): never): void|\Illuminate\Validation\Rules\Exists|string>>
+     * @return array<string, array<Closure|\Illuminate\Contracts\Validation\Rule|string>|string>
      */
     public function rules(): array
     {

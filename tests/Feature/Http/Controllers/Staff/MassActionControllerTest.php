@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -68,8 +65,12 @@ final class MassActionControllerTest extends TestCase
         $message = PrivateMessage::factory()->create();
 
         $response = $this->actingAs($user)->post(route('staff.mass-pm.store'), [
-            'subject' => $message->conversation->subject,
-            'message' => $message->message,
+            'sender_id'   => $user->id,
+            'receiver_id' => $message->receiver_id,
+            'subject'     => $message->subject,
+            'message'     => $message->message,
+            'read'        => $message->read,
+            'related_to'  => $message->related_to,
         ]);
 
         $response->assertRedirect(route('staff.mass-pm.create'));

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -33,7 +30,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BonExchange extends Model
 {
-    /** @use HasFactory<\Database\Factories\BonExchangeFactory> */
     use HasFactory;
 
     /**
@@ -46,15 +42,15 @@ class BonExchange extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{upload: 'bool', download: 'bool', personal_freeleech: 'bool', invite: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'upload'             => 'bool',
-            'download'           => 'bool',
-            'personal_freeleech' => 'bool',
-            'invite'             => 'bool',
+            'upload'             => 'boolean',
+            'download'           => 'boolean',
+            'personal_freeleech' => 'boolean',
+            'invite'             => 'boolean',
         ];
     }
 

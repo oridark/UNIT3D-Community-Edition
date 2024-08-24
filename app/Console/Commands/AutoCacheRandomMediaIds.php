@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -21,7 +18,6 @@ use App\Models\Tv;
 use Illuminate\Console\Command;
 use Exception;
 use Illuminate\Support\Facades\Redis;
-use Throwable;
 
 class AutoCacheRandomMediaIds extends Command
 {
@@ -42,9 +38,9 @@ class AutoCacheRandomMediaIds extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
         $movieIds = Movie::query()
             ->select('id')
@@ -58,17 +54,13 @@ class AutoCacheRandomMediaIds extends Command
             ->whereNotNull('backdrop')
             ->pluck('id');
 
-        if ($movieIds->isNotEmpty()) {
-            $cacheKey = config('cache.prefix').':random-media-movie-ids';
+        $cacheKey = config('cache.prefix').':random-media-movie-ids';
 
-            Redis::connection('cache')->command('SADD', [$cacheKey, ...$movieIds]);
-        }
+        Redis::connection('cache')->command('SADD', [$cacheKey, ...$movieIds]);
 
-        if ($tvIds->isNotEmpty()) {
-            $cacheKey = config('cache.prefix').':random-media-tv-ids';
+        $cacheKey = config('cache.prefix').':random-media-tv-ids';
 
-            Redis::connection('cache')->command('SADD', [$cacheKey, ...$tvIds]);
-        }
+        Redis::connection('cache')->command('SADD', [$cacheKey, ...$tvIds]);
 
         $this->comment($movieIds->count().' movie ids and '.$tvIds->count().' tv ids cached.');
     }

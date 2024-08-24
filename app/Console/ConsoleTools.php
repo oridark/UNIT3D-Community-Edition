@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -23,36 +20,39 @@ use Symfony\Component\Process\Process;
 
 trait ConsoleTools
 {
-    protected SymfonyStyle $io;
+    /**
+     * @var SymfonyStyle
+     */
+    protected $io;
 
-    private function cyan(string $line): void
+    private function cyan($line): void
     {
-        $this->io->writeln(\sprintf('<fg=cyan>%s</>', $line));
+        $this->io->writeln(sprintf('<fg=cyan>%s</>', $line));
     }
 
-    private function white(string $line): void
+    private function white($line): void
     {
         $this->io->writeln(PHP_EOL.$line);
     }
 
-    private function magenta(string $line): void
+    private function magenta($line): void
     {
-        $this->io->writeln(\sprintf('<fg=magenta>%s</>', $line));
+        $this->io->writeln(sprintf('<fg=magenta>%s</>', $line));
     }
 
-    private function green(string $line): void
+    private function green($line): void
     {
-        $this->io->writeln(\sprintf('<fg=green>%s</>', $line));
+        $this->io->writeln(sprintf('<fg=green>%s</>', $line));
     }
 
-    private function red(string $line): void
+    private function red($line): void
     {
-        $this->io->writeln(\sprintf('<fg=red>%s</>', $line));
+        $this->io->writeln(sprintf('<fg=red>%s</>', $line));
     }
 
-    private function blue(string $line): void
+    private function blue($line): void
     {
-        $this->io->writeln(\sprintf('<fg=blue>%s</>', $line));
+        $this->io->writeln(sprintf('<fg=blue>%s</>', $line));
     }
 
     private function done(): void
@@ -60,34 +60,34 @@ trait ConsoleTools
         $this->green('<fg=white>[</>Done<fg=white>]</>');
     }
 
-    private function header(string $line): void
+    private function header($line): void
     {
         $this->blue(str_repeat('=', 50));
         $this->io->write($line);
         $this->blue(str_repeat('=', 50));
     }
 
-    private function alertSuccess(string $line): void
+    private function alertSuccess($line): void
     {
-        $this->io->writeln(\sprintf('<fg=white>[</><fg=green> !! %s !! </><fg=white>]</>', $line));
+        $this->io->writeln(sprintf('<fg=white>[</><fg=green> !! %s !! </><fg=white>]</>', $line));
     }
 
-    private function alertDanger(string $line): void
+    private function alertDanger($line): void
     {
-        $this->io->writeln(\sprintf('<fg=white>[</><fg=red> !! %s !! </><fg=white>]</>', $line));
+        $this->io->writeln(sprintf('<fg=white>[</><fg=red> !! %s !! </><fg=white>]</>', $line));
     }
 
-    private function alertInfo(string $line): void
+    private function alertInfo($line): void
     {
-        $this->io->writeln(\sprintf('<fg=white>[</><fg=cyan> !! %s !! </><fg=white>]</>', $line));
+        $this->io->writeln(sprintf('<fg=white>[</><fg=cyan> !! %s !! </><fg=white>]</>', $line));
     }
 
-    private function alertWarning(string $line): void
+    private function alertWarning($line): void
     {
-        $this->io->writeln(\sprintf('<fg=white>[</><fg=yellow> !! %s !! </><fg=white>]</>', $line));
+        $this->io->writeln(sprintf('<fg=white>[</><fg=yellow> !! %s !! </><fg=white>]</>', $line));
     }
 
-    private function commands(array $commands, bool $silent = false): void
+    private function commands(array $commands, $silent = false): void
     {
         foreach ($commands as $command) {
             $process = $this->process($command, $silent);
@@ -99,7 +99,7 @@ trait ConsoleTools
         }
     }
 
-    private function process(string $command, bool $silent = false): Process
+    private function process($command, $silent = false): Process
     {
         if (!$silent) {
             $this->cyan($command);
@@ -114,7 +114,7 @@ trait ConsoleTools
             try {
                 $process->checkTimeout();
             } catch (ProcessTimedOutException) {
-                $this->red(\sprintf("'%s' timed out.!", $command));
+                $this->red(sprintf("'%s' timed out.!", $command));
             }
 
             if (!$silent) {
@@ -132,6 +132,7 @@ trait ConsoleTools
 
         if (!$process->isSuccessful()) {
             $this->red($process->getErrorOutput());
+            //die();
         }
 
         return $process;
@@ -143,6 +144,7 @@ trait ConsoleTools
         $bar->setBarCharacter('<fg=magenta>=</>');
         $bar->setFormat('[%bar%] (<fg=cyan>%message%</>)');
         $bar->setMessage('Please Wait ...');
+        //$bar->setRedrawFrequency(20); todo: may be useful for platforms like CentOS
         $bar->start();
 
         return $bar;

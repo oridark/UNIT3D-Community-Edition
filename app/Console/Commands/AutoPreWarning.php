@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -22,9 +19,10 @@ use App\Notifications\UserPreWarning;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Exception;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
+/**
+ * @see \Tests\Unit\Console\Commands\AutoPreWarningTest
+ */
 class AutoPreWarning extends Command
 {
     /**
@@ -44,14 +42,14 @@ class AutoPreWarning extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
         if (config('hitrun.enabled') === true) {
             $carbon = new Carbon();
             $prewarn = History::with(['user', 'torrent'])
-                ->whereNull('prewarned_at')
+                ->where('prewarn', '=', 0)
                 ->where('hitrun', '=', 0)
                 ->where('immune', '=', 0)
                 ->where('actual_downloaded', '>', 0)
@@ -74,13 +72,9 @@ class AutoPreWarning extends Command
                         ->first();
 
                     if ($exsist === null) {
-                        History::query()
-                            ->where('torrent_id', '=', $pre->torrent_id)
-                            ->where('user_id', '=', $pre->user_id)
-                            ->update([
-                                'prewarned_at' => now(),
-                                'updated_at'   => DB::raw('updated_at'),
-                            ]);
+                        $pre->prewarn = true;
+                        $pre->timestamps = false;
+                        $pre->save();
 
                         // Add user to usersWithWarnings array
                         $usersWithPreWarnings[$pre->user->id] = $pre->user;

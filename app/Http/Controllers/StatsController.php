@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,13 +13,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Group;
+use App\Models\History;
 use App\Models\Language;
 use App\Models\Peer;
 use App\Models\Torrent;
 use App\Models\TorrentRequest;
 use App\Models\User;
-use App\Models\UserSetting;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Exception;
@@ -44,10 +42,75 @@ class StatsController extends Controller
 
     /**
      * Show Extra-Stats Index.
+     *
+     * @throws Exception
      */
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
-        return view('stats.index');
+        // Total Torrents Count
+        $numTorrent = cache()->remember('num_torrent', $this->carbon, fn () => Torrent::count());
+
+        // Total SD Count
+        $numSd = cache()->remember('num_sd', $this->carbon, fn () => Torrent::where('sd', '=', 1)->count());
+
+        // Generally sites have more seeders than leechers, so it ends up being faster (by approximately 50%) to compute these stats instead of computing them individually
+        $leecherCount = cache()->remember('peer_seeder_count', $this->carbon, fn () => Peer::where('seeder', '=', false)->where('active', '=', true)->count());
+        $peerCount = cache()->remember('peer_count', $this->carbon, fn () => Peer::where('active', '=', true)->count());
+
+        $historyStats = cache()->remember(
+            'history_stats',
+            $this->carbon,
+            fn () => History::query()
+                ->selectRaw('SUM(actual_uploaded) as actual_upload')
+                ->selectRaw('SUM(uploaded) as credited_upload')
+                ->selectRaw('SUM(actual_downloaded) as actual_download')
+                ->selectRaw('SUM(downloaded) as credited_download')
+                ->first()
+        );
+
+        $bannedGroup = cache()->rememberForever('banned_group', fn () => Group::where('slug', '=', 'banned')->pluck('id'));
+
+        return view('stats.index', [
+            'all_user' => cache()->remember(
+                'all_user',
+                $this->carbon,
+                fn () => User::withTrashed()->count()
+            ),
+            'active_user' => cache()->remember(
+                'active_user',
+                $this->carbon,
+                fn () => User::whereNotIn('group_id', Group::select('id')->whereIn('slug', ['banned', 'validating', 'disabled', 'pruned']))->count()
+            ),
+            'disabled_user' => cache()->remember(
+                'disabled_user',
+                $this->carbon,
+                fn () => User::whereRelation('group', 'slug', '=', 'disabled')->count()
+            ),
+            'pruned_user' => cache()->remember(
+                'pruned_user',
+                $this->carbon,
+                fn () => User::onlyTrashed()->whereRelation('group', 'slug', '=', 'pruned')->count()
+            ),
+            'banned_user' => cache()->remember(
+                'banned_user',
+                $this->carbon,
+                fn () => User::whereRelation('group', 'slug', '=', 'banned')->count()
+            ),
+            'num_torrent'       => $numTorrent,
+            'categories'        => Category::withCount('torrents')->orderBy('position')->get(),
+            'num_hd'            => $numTorrent - $numSd,
+            'num_sd'            => $numSd,
+            'torrent_size'      => cache()->remember('torrent_size', $this->carbon, fn () => Torrent::sum('size')),
+            'num_seeders'       => $peerCount - $leecherCount,
+            'num_leechers'      => $leecherCount,
+            'num_peers'         => $peerCount,
+            'actual_upload'     => $historyStats->actual_upload,
+            'actual_download'   => $historyStats->actual_download,
+            'actual_up_down'    => $historyStats->actual_upload + $historyStats->actual_download,
+            'credited_upload'   => $historyStats->credited_upload,
+            'credited_download' => $historyStats->credited_download,
+            'credited_up_down'  => $historyStats->credited_upload + $historyStats->credited_download,
+        ]);
     }
 
     /**
@@ -278,14 +341,16 @@ class StatsController extends Controller
     public function groupsRequirements(): \Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
         $user = auth()->user();
+        $user_avg_seedtime = DB::table('history')->where('user_id', '=', $user->id)->avg('seedtime');
+        $user_account_age = Carbon::now()->diffInSeconds($user->created_at);
+        $user_seed_size = $user->seedingTorrents()->sum('size');
 
         return view('stats.groups.groups-requirements', [
             'current'           => Carbon::now(),
-            'user'              => $user,
-            'user_avg_seedtime' => DB::table('history')->where('user_id', '=', $user->id)->avg('seedtime'),
-            'user_account_age'  => Carbon::now()->diffInSeconds($user->created_at),
-            'user_seed_size'    => $user->seedingTorrents()->sum('size'),
-            'user_uploads'      => $user->torrents()->count(),
+            'user'              => auth()->user(),
+            'user_avg_seedtime' => $user_avg_seedtime,
+            'user_account_age'  => $user_account_age,
+            'user_seed_size'    => $user_seed_size,
             'groups'            => Group::orderBy('position')->where('is_modo', '=', 0)->get(),
         ]);
     }
@@ -305,26 +370,8 @@ class StatsController extends Controller
      */
     public function clients(): \Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
-        $clients = cache()->get('stats:clients') ?? [];
-
-        $groupedClients = [];
-
-        foreach ($clients as $client) {
-            $prefix = preg_split('/\/| /', $client['agent'], 2)[0] ?? $client['agent'];
-
-            if (\array_key_exists($prefix, $groupedClients)) {
-                $groupedClients[$prefix]['user_count'] += $client['user_count'];
-                $groupedClients[$prefix]['peer_count'] += $client['peer_count'];
-            } else {
-                $groupedClients[$prefix]['user_count'] = $client['user_count'];
-                $groupedClients[$prefix]['peer_count'] = $client['peer_count'];
-            }
-
-            $groupedClients[$prefix]['clients'][] = $client;
-        }
-
         return view('stats.clients.clients', [
-            'clients' => $groupedClients,
+            'clients' => cache()->get('stats:clients') ?? [],
         ]);
     }
 
@@ -334,16 +381,16 @@ class StatsController extends Controller
     public function themes(): \Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
         return view('stats.themes.index', [
-            'siteThemes' => UserSetting::select(DB::raw('style, count(*) as value'))
+            'siteThemes' => User::select(DB::raw('style, count(*) as value'))
                 ->groupBy('style')
                 ->orderByDesc('value')
                 ->get(),
-            'customThemes' => UserSetting::where('custom_css', '!=', '')
+            'customThemes' => User::where('custom_css', '!=', '')
                 ->select(DB::raw('custom_css, count(*) as value'))
                 ->groupBy('custom_css')
                 ->orderByDesc('value')
                 ->get(),
-            'standaloneThemes' => UserSetting::whereNotNull('standalone_css')
+            'standaloneThemes' => User::whereNotNull('standalone_css')
                 ->select(DB::raw('standalone_css, count(*) as value'))
                 ->groupBy('standalone_css')
                 ->orderByDesc('value')

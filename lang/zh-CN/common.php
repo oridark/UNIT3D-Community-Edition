@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * NOTICE OF LICENSE.
  *
@@ -188,6 +186,7 @@ return [
     'second'               => '秒',
     'select'               => '选取',
     'similar'              => '相似',
+    'site-title'           => '电影收藏馆',
     'something-went-wrong' => '出了点问题！',
     'sort'                 => '排序',
     'special'              => '特色',

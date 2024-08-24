@@ -21,19 +21,31 @@
         <link rel="shortcut icon" href="{{ url('/favicon.ico') }}" type="image/x-icon" />
         <link rel="icon" href="{{ url('/favicon.ico') }}" type="image/x-icon" />
         @vite('resources/sass/pages/_auth.scss')
+        <style>
+            html{
+                height: 100%;
+            }
+        </style>
     </head>
     <body>
         <!-- Do NOT Change! For Jackett Support -->
         <div class="Jackett" style="display: none">{{ config('unit3d.powered-by') }}</div>
         <!-- Do NOT Change! For Jackett Support -->
         <main>
-            <section class="auth-form">
+            <div class="branding">
+                <a class="auth-form__branding" href="{{ route('home.index') }}">
+                    <i class="fal fa-tv-retro"></i>
+                    <span class="auth-form__site-logo">{{ \config('other.title') }}</span>
+                </a>
+            </div>
+            <section class="auth-form login">
                 <form class="auth-form__form" method="POST" action="{{ route('login') }}">
-                    @csrf
+                    <!-- @csrf
                     <a class="auth-form__branding" href="{{ route('home.index') }}">
                         <i class="fal fa-tv-retro"></i>
                         <span class="auth-form__site-logo">{{ \config('other.title') }}</span>
-                    </a>
+                    </a> -->
+                    @csrf
                     @if (Session::has('warning') || Session::has('success') || Session::has('info'))
                         <ul class="auth-form__important-infos">
                             @if (Session::has('warning'))
@@ -56,7 +68,7 @@
                         </ul>
                     @endif
 
-                    <p class="auth-form__text-input-group">
+                    <p class="auth-form__text-input-group auth-form__group">
                         <label class="auth-form__label" for="username">
                             {{ __('auth.username') }}
                         </label>
@@ -71,7 +83,7 @@
                             value="{{ old('username') }}"
                         />
                     </p>
-                    <p class="auth-form__text-input-group">
+                    <p class="auth-form__text-input-group auth-form__group ">
                         <label class="auth-form__label" for="password">
                             {{ __('auth.password') }}
                         </label>
@@ -99,8 +111,22 @@
                     @if (config('captcha.enabled'))
                         @hiddencaptcha
                     @endif
-
-                    <button class="auth-form__primary-button">{{ __('auth.login') }}</button>
+                    
+                    <div class="auth-form__button">
+                        @if (! config('other.invite-only'))
+                            <a class="auth-form__a_btn" href="{{ route('register') }}">
+                                {{ __('auth.signup') }}
+                            </a>
+                        @elseif (config('other.application_signups'))
+                            <a class="auth-form__a_btn" href="{{ route('application.create') }}">
+                                {{ __('auth.apply') }}
+                            </a>
+                        @endif
+                        <a class="auth-form__a_btn" href="{{ route('password.request') }}">
+                            {{ __('auth.lost-password') }}
+                        </a>
+                        <button class="auth-form__primary-button">{{ __('auth.login') }}</button>
+                    </div>
                     @if (Session::has('errors'))
                         <ul class="auth-form__errors">
                             @foreach ($errors->all() as $error)
@@ -109,7 +135,7 @@
                         </ul>
                     @endif
                 </form>
-                <footer class="auth-form__footer">
+                <!-- <footer class="auth-form__footer">
                     @if (! config('other.invite-only'))
                         <a class="auth-form__footer-item" href="{{ route('register') }}">
                             {{ __('auth.signup') }}
@@ -122,7 +148,7 @@
                     <a class="auth-form__footer-item" href="{{ route('password.request') }}">
                         {{ __('auth.lost-password') }}
                     </a>
-                </footer>
+                </footer> -->
             </section>
         </main>
     </body>

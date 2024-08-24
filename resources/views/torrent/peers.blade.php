@@ -79,7 +79,8 @@
                                 <x-user_tag
                                     :user="$peer->user"
                                     :anon="
-                                        $peer->user->privacy?->hidden
+                                        $peer->user->hidden == 1
+                                        || $peer->user->peer_hidden == 1
                                         || $peer->user->privacy?->show_peer === 0
                                         || ($peer->user->id == $torrent->user->id && $torrent->anon == 1)
                                     "

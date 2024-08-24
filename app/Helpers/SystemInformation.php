@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -210,7 +207,7 @@ class SystemInformation
     private function getDirectoryPermission(string $path): string
     {
         try {
-            return substr(\sprintf('%o', fileperms(base_path($path))), -4);
+            return substr(sprintf('%o', fileperms(base_path($path))), -4);
         } catch (Exception) {
             return trans('site.error');
         }

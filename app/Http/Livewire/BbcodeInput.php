@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,12 +31,12 @@ class BbcodeInput extends Component
 
     public string $contentHtml = '';
 
-    final public function mount(string $name, string $label, bool $required = false, string $content = null): void
+    final public function mount($name, $label, $required = false, $content = null): void
     {
         $this->name = $name;
         $this->label = $label;
         $this->isRequired = $required;
-        $this->contentBbcode = $content === null ? (old($name) ?? '') : htmlspecialchars_decode($content);
+        $this->contentBbcode = $content === null ? (old($name) ?? '') : htmlspecialchars_decode((string) $content);
     }
 
     final public function updatedIsPreviewEnabled(): void

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -21,7 +18,6 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Exception;
-use Throwable;
 
 class AutoUpsertAnnounces extends Command
 {
@@ -42,9 +38,9 @@ class AutoUpsertAnnounces extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
         /**
          * MySql can handle a max of 65535 placeholders per query,

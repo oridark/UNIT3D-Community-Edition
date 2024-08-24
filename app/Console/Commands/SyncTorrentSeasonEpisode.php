@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -18,9 +15,7 @@ namespace App\Console\Commands;
 
 use App\Models\Scopes\ApprovedScope;
 use App\Models\Torrent;
-use Exception;
 use Illuminate\Console\Command;
-use Throwable;
 
 class SyncTorrentSeasonEpisode extends Command
 {
@@ -40,10 +35,8 @@ class SyncTorrentSeasonEpisode extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
      */
-    final public function handle(): void
+    public function handle(): void
     {
         foreach (Torrent::withoutGlobalScope(ApprovedScope::class)->with(['category'])->whereNull('season_number')->orWhereNull('episode_number')->get() as $torrent) {
             // Skip if not TV

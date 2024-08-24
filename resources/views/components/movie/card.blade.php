@@ -5,14 +5,14 @@
 
 <article class="torrent-search--grouped__result">
     <header class="torrent-search--grouped__header">
-        @if (auth()->user()->settings?->show_poster)
+        @if (auth()->user()->show_poster == 1)
             <a
                 href="{{ route('torrents.similar', ['category_id' => $media->category_id, 'tmdb' => $media->id]) }}"
                 class="torrent-search--grouped__poster"
             >
                 <img
                     src="{{ isset($media->poster) ? tmdb_image('poster_small', $media->poster) : 'https://via.placeholder.com/90x135' }}"
-                    alt="{{ __('torrent.similar') }}"
+                    alt="{{ __('torrent.poster') }}"
                     loading="lazy"
                 />
             </a>
@@ -48,7 +48,7 @@
         <div class="torrent-search--grouped__genres">
             @foreach ($media->genres->take(3) as $genre)
                 <a
-                    href="{{ route('torrents.index', ['view' => 'group', 'genreIds' => [$genre->id]]) }}"
+                    href="{{ route('torrents.index', ['view' => 'group', 'genres' => $genre->id]) }}"
                     class="torrent-search--grouped__genre"
                 >
                     {{ $genre->name }}

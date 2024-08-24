@@ -19,7 +19,7 @@ return new class () extends Migration {
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up(): viod
     {
         Schema::create('{{ table }}', function (Blueprint $table): void {
             $table->increments('id');

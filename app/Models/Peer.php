@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -41,20 +38,19 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Peer extends Model
 {
-    /** @use HasFactory<\Database\Factories\PeerFactory> */
     use HasFactory;
 
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{active: 'bool', seeder: 'bool', connectable: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'active'      => 'bool',
-            'seeder'      => 'bool',
-            'connectable' => 'bool',
+            'active'      => 'boolean',
+            'seeder'      => 'boolean',
+            'connectable' => 'boolean',
         ];
     }
 
@@ -69,7 +65,7 @@ class Peer extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -82,7 +78,7 @@ class Peer extends Model
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -92,7 +88,7 @@ class Peer extends Model
     /**
      * Belongs To A Seed.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function seed(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

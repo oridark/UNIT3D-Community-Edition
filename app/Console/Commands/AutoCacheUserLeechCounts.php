@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -19,7 +16,6 @@ namespace App\Console\Commands;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Exception;
-use Throwable;
 
 class AutoCacheUserLeechCounts extends Command
 {
@@ -40,9 +36,9 @@ class AutoCacheUserLeechCounts extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
         $peerCounts = User::withoutGlobalScopes()
             ->selectRaw("CONCAT('user-leeching-count:', id) as cacheKey")

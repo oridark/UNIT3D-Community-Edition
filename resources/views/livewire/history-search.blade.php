@@ -376,13 +376,6 @@
                                     @include('livewire.includes._sort-icon', ['field' => 'history.completed_at'])
                                 </th>
                                 <th
-                                    wire:click="sortBy('history.prewarned_at')"
-                                    role="columnheader button"
-                                >
-                                    {{ __('torrent.prewarn') }}
-                                    @include('livewire.includes._sort-icon', ['field' => 'history.prewarned_at'])
-                                </th>
-                                <th
                                     wire:click="sortBy('history.seedtime')"
                                     role="columnheader button"
                                 >
@@ -396,6 +389,13 @@
                                 <th wire:click="sortBy('leeching')" role="columnheader button">
                                     {{ __('torrent.leeching') }}
                                     @include('livewire.includes._sort-icon', ['field' => 'leeching'])
+                                </th>
+                                <th
+                                    wire:click="sortBy('prewarn')"
+                                    role="columnheader button"
+                                    title="{{ __('torrent.prewarn') }}"
+                                >
+                                    <i class="fas fa-exclamation"></i>
                                 </th>
                                 <th
                                     wire:click="sortBy('hitrun')"
@@ -472,14 +472,6 @@
                                             {{ $history->completed_at ? $history->completed_at->diffForHumans() : 'N/A' }}
                                         </time>
                                     </td>
-                                    <td>
-                                        <time
-                                            datetime="{{ $history->prewarned_at }}"
-                                            title="{{ $history->prewarned_at }}"
-                                        >
-                                            {{ $history->prewarned_at ? $history->prewarned_at->diffForHumans() : 'N/A' }}
-                                        </time>
-                                    </td>
 
                                     @if ($history->seedtime < config('hitrun.seedtime'))
                                         <td
@@ -547,6 +539,19 @@
                                             <i
                                                 class="{{ config('other.font-awesome') }} text-red fa-times"
                                                 title="Not warned"
+                                            ></i>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($history->prewarn)
+                                            <i
+                                                class="{{ config('other.font-awesome') }} text-green fa-check"
+                                                title="Prewarned"
+                                            ></i>
+                                        @else
+                                            <i
+                                                class="{{ config('other.font-awesome') }} text-red fa-times"
+                                                title="Not Prewarned"
                                             ></i>
                                         @endif
                                     </td>

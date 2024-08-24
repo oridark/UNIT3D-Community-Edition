@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,12 +13,12 @@ declare(strict_types=1);
 
 namespace App\Services\Tmdb\Client;
 
+use JsonException;
 use App\Enums\Occupation;
 use App\Services\Tmdb\TMDB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use DateTime;
-use Exception;
 
 class Movie
 {
@@ -199,7 +196,7 @@ class Movie
      *         results: ?array<
      *             int<0, max>,
      *             ?array{
-     *                 adult: ?bool,
+     *                 adult: ?boolean,
      *                 backdrop_path: ?string,
      *                 id: ?int,
      *                 title: ?string,
@@ -237,7 +234,8 @@ class Movie
     public TMDB $tmdb;
 
     /**
-     * @throws \Illuminate\Http\Client\ConnectionException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws JsonException
      */
     public function __construct(int $id)
     {
@@ -254,8 +252,7 @@ class Movie
     }
 
     /**
-     * @throws Exception
-     * @return ?array{
+     * @return null|array{
      *     adult: bool,
      *     backdrop: ?string,
      *     budget: ?int,
@@ -279,21 +276,16 @@ class Movie
      */
     public function getMovie(): ?array
     {
-        if ($this->data !== null && \array_key_exists('title', $this->data) && \is_string($this->data['title'])) {
-            $titleSort = null;
+        if (\array_key_exists('title', $this->data)) {
+            $re = '/((?<namesort>.*)(?<seperator>\:|and)(?<remaining>.*)|(?<name>.*))/m';
+            preg_match($re, (string) $this->data['title'], $matches);
 
-            if ($this->data['release_date'] !== null) {
-                $re = '/((?<namesort>.*)(?<seperator>\:|and)(?<remaining>.*)|(?<name>.*))/m';
-                preg_match($re, $this->data['title'], $matches);
-
-                $year = (new DateTime($this->data['release_date']))->format('Y');
-
-                $titleSort = addslashes(str_replace(
-                    ['The ', 'An ', 'A ', '"'],
-                    [''],
-                    Str::limit($matches['namesort'] ? $matches['namesort'].' '.$year : $this->data['title'], 100)
-                ));
-            }
+            $year = (new DateTime($this->data['release_date']))->format('Y');
+            $titleSort = addslashes(str_replace(
+                ['The ', 'An ', 'A ', '"'],
+                [''],
+                Str::limit($matches['namesort'] ? $matches['namesort'].' '.$year : $this->data['title'], 100)
+            ));
 
             return [
                 'adult'             => $this->data['adult'] ?? false,
@@ -332,7 +324,7 @@ class Movie
     {
         $genres = [];
 
-        foreach ($this->data['genres'] ?? [] as $genre) {
+        foreach ($this->data['genres'] as $genre) {
             $genres[] = [
                 'id'   => $genre['id'] ?? null,
                 'name' => $genre['name'] ?? null,
@@ -369,10 +361,6 @@ class Movie
         }
 
         foreach ($this->data['credits']['crew'] ?? [] as $person) {
-            if (!\array_key_exists('job', $person) || $person['job'] === null) {
-                continue;
-            }
-
             $job = Occupation::from_tmdb_job($person['job']);
 
             if ($job !== null) {
@@ -412,13 +400,9 @@ class Movie
         $recommendations = [];
 
         foreach ($this->data['recommendations']['results'] ?? [] as $recommendation) {
-            if ($recommendation === null || $recommendation['id'] === null) {
-                continue;
-            }
-
             if ($movie_ids->contains($recommendation['id'])) {
                 $recommendations[] = [
-                    'recommendation_movie_id' => $recommendation['id'],
+                    'recommendation_movie_id' => $recommendation['id'] ?? null,
                     'movie_id'                => $this->data['id'] ?? null,
                     'title'                   => $recommendation['title'] ?? null,
                     'vote_average'            => $recommendation['vote_average'] ?? null,

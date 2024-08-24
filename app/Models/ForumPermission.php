@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -33,8 +30,6 @@ use Illuminate\Database\Eloquent\Model;
 class ForumPermission extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\ForumPermissionFactory> */
     use HasFactory;
 
     /**
@@ -49,21 +44,21 @@ class ForumPermission extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{read_topic: 'bool', reply_topic: 'bool', start_topic: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'read_topic'  => 'bool',
-            'reply_topic' => 'bool',
-            'start_topic' => 'bool',
+            'read_topic'  => 'boolean',
+            'reply_topic' => 'boolean',
+            'start_topic' => 'boolean',
         ];
     }
 
     /**
      * Belongs To A Group.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Group, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Group, self>
      */
     public function group(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -73,7 +68,7 @@ class ForumPermission extends Model
     /**
      * Belongs To A Forum.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Forum, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Forum, self>
      */
     public function forum(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

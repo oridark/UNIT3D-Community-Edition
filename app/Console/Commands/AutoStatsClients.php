@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -17,11 +14,8 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Peer;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class AutoStatsClients extends Command
 {
@@ -41,22 +35,20 @@ class AutoStatsClients extends Command
 
     /**
      * Execute the console command.
-     *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
      */
-    final public function handle(): void
+    public function handle(): void
     {
-        $clients = Peer::selectRaw('agent, COUNT(*) as user_count, SUM(peer_count) as peer_count')
+        $clients = Peer::selectRaw('agent, count(*) as count')
             ->fromSub(
                 Peer::query()
-                    ->select(['agent', 'user_id', DB::raw('COUNT(*) as peer_count')])
+                    ->select(['agent', 'user_id'])
                     ->groupBy('agent', 'user_id')
                     ->where('active', '=', true),
                 'distinct_agent_user'
             )
             ->groupBy('agent')
             ->orderBy('agent')
-            ->get()
+            ->pluck('count', 'agent')
             ->toArray();
 
         if (!empty($clients)) {

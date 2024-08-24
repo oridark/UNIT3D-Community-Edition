@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 return [
     /*
     |--------------------------------------------------------------------------
@@ -188,4 +186,6 @@ return [
             'read_write_timeout' => -1,
         ],
     ],
+
+    'pristine-db-file' => env('PRISTINE_DB_FILE'),
 ];

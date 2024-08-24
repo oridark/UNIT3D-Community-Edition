@@ -38,7 +38,7 @@
                                 <td>
                                     <img
                                         src="{{ url($following->image === null ? 'img/profile.png' : 'files/img/' . $following->image) }}"
-                                        alt=""
+                                        alt="{{ $following->username }}"
                                         class="user-search__avatar"
                                     />
                                 </td>

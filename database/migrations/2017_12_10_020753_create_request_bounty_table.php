@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ return new class () extends Migration {
         Schema::create('request_bounty', function (Blueprint $table): void {
             $table->integer('id', true);
             $table->integer('user_id')->index('addedby');
-            $table->double('seedbonus')->unsigned()->default(0.00);
+            $table->float('seedbonus', 12)->unsigned()->default(0.00);
             $table->integer('requests_id')->index('request_id');
             $table->timestamps();
         });

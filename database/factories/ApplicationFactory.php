@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,7 +31,7 @@ class ApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'type'         => $this->faker->randomElement(['New To The Game', 'Experienced With Private Trackers']),
+            'type'         => $this->faker->word(),
             'email'        => $this->faker->unique()->email(),
             'referrer'     => $this->faker->text(),
             'status'       => $this->faker->boolean(),

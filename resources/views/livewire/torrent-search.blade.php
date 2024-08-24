@@ -7,11 +7,7 @@
                     <button
                         class="form__button form__button--outlined form__button--centered"
                         x-on:click="toggle"
-                        x-text="
-                            isToggledOn()
-                                ? '{{ __('common.search-hide') }}'
-                                : '{{ __('common.search-advanced') }}'
-                        "
+                        x-text="isToggledOn() ? '{{ __('common.search-hide') }}' : '{{ __('common.search-advanced') }}'"
                     ></button>
                 </div>
             </div>
@@ -24,9 +20,7 @@
                         wire:model.live="name"
                         class="form__text"
                         placeholder=" "
-                        @if (auth()->user()->settings?->torrent_search_autofocus)
-                            autofocus
-                        @endif
+                        autofocus
                     />
                     <label class="form__label form__label--floating" for="name">
                         {{ __('torrent.name') }}
@@ -81,62 +75,32 @@
                     </p>
                 </div>
                 <div class="form__group--short-horizontal">
-                    <div class="form__group--short-horizontal">
-                        <p class="form__group">
-                            <input
-                                id="startYear"
-                                wire:model.live="startYear"
-                                class="form__text"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                                placeholder=" "
-                            />
-                            <label class="form__label form__label--floating" for="startYear">
-                                {{ __('torrent.start-year') }}
-                            </label>
-                        </p>
-                        <p class="form__group">
-                            <input
-                                id="endYear"
-                                wire:model.live="endYear"
-                                class="form__text"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                                placeholder=" "
-                            />
-                            <label class="form__label form__label--floating" for="endYear">
-                                {{ __('torrent.end-year') }}
-                            </label>
-                        </p>
-                    </div>
-                    <div class="form__group--short-horizontal">
-                        <p class="form__group">
-                            <input
-                                id="episodeNumber"
-                                wire:model.live="episodeNumber"
-                                class="form__text"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                                placeholder=" "
-                            />
-                            <label class="form__label form__label--floating" for="episodeNumber">
-                                {{ __('torrent.episode-number') }}
-                            </label>
-                        </p>
-                        <p class="form__group">
-                            <input
-                                id="seasonNumber"
-                                wire:model.live="seasonNumber"
-                                class="form__text"
-                                inputmode="numeric"
-                                pattern="[0-9]*"
-                                placeholder=" "
-                            />
-                            <label class="form__label form__label--floating" for="seasonNumber">
-                                {{ __('torrent.season-number') }}
-                            </label>
-                        </p>
-                    </div>
+                    <p class="form__group">
+                        <input
+                            id="startYear"
+                            wire:model.live="startYear"
+                            class="form__text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            placeholder=" "
+                        />
+                        <label class="form__label form__label--floating" for="startYear">
+                            {{ __('torrent.start-year') }}
+                        </label>
+                    </p>
+                    <p class="form__group">
+                        <input
+                            id="endYear"
+                            wire:model.live="endYear"
+                            class="form__text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            placeholder=" "
+                        />
+                        <label class="form__label form__label--floating" for="endYear">
+                            {{ __('torrent.end-year') }}
+                        </label>
+                    </p>
                     <div class="form__group--short-horizontal">
                         <p class="form__group">
                             <input
@@ -158,15 +122,15 @@
                                 class="form__select"
                                 placeholder=" "
                             >
-                                <option value="1" selected>Bytes</option>
+                                <!-- <option value="1" selected>Bytes</option> -->
                                 <option value="1000">KB</option>
-                                <option value="1024">KiB</option>
+                                <!-- <option value="1024">KiB</option> -->
                                 <option value="1000000">MB</option>
-                                <option value="1048576">MiB</option>
+                                <!-- <option value="1048576">MiB</option> -->
                                 <option value="1000000000">GB</option>
-                                <option value="1073741824">GiB</option>
+                                <!-- <option value="1073741824">GiB</option> -->
                                 <option value="1000000000000">TB</option>
-                                <option value="1099511627776">TiB</option>
+                                <!-- <option value="1099511627776">TiB</option> -->
                             </select>
                             <label
                                 class="form__label form__label--floating"
@@ -197,15 +161,15 @@
                                 class="form__select"
                                 placeholder=" "
                             >
-                                <option value="1" selected>Bytes</option>
+                                <!-- <option value="1" selected>Bytes</option> -->
                                 <option value="1000">KB</option>
-                                <option value="1024">KiB</option>
+                                <!-- <option value="1024">KiB</option> -->
                                 <option value="1000000">MB</option>
-                                <option value="1048576">MiB</option>
+                                <!-- <option value="1048576">MiB</option> -->
                                 <option value="1000000000">GB</option>
-                                <option value="1073741824">GiB</option>
+                                <!-- <option value="1073741824">GiB</option> -->
                                 <option value="1000000000000">TB</option>
-                                <option value="1099511627776">TiB</option>
+                                <!-- <option value="1099511627776">TiB</option> -->
                             </select>
                             <label
                                 class="form__label form__label--floating"
@@ -218,9 +182,25 @@
                 </div>
                 <div class="form__group--short-horizontal">
                     <div class="form__group">
+                        @php
+                            $regions = cache()->remember(
+                                'regions',
+                                3_600,
+                                fn () => App\Models\Region::orderBy('position')->get()
+                            )
+                        @endphp
+
                         <div id="regions" wire:ignore></div>
                     </div>
                     <div class="form__group">
+                        @php
+                            $distributors = cache()->remember(
+                                'distributors',
+                                3_600,
+                                fn () => App\Models\Distributor::orderBy('name')->get()
+                            )
+                        @endphp
+
                         <div id="distributors" wire:ignore></div>
                     </div>
                     <p class="form__group">
@@ -348,6 +328,14 @@
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">{{ __('torrent.category') }}</legend>
                             <div class="form__fieldset-checkbox-container">
+                                @php
+                                    $categories = cache()->remember(
+                                        'categories',
+                                        3_600,
+                                        fn () => App\Models\Category::orderBy('position')->get()
+                                    )
+                                @endphp
+
                                 @foreach ($categories as $category)
                                     <p class="form__group">
                                         <label class="form__label">
@@ -355,7 +343,7 @@
                                                 class="form__checkbox"
                                                 type="checkbox"
                                                 value="{{ $category->id }}"
-                                                wire:model.live="categoryIds"
+                                                wire:model.live="categories"
                                             />
                                             {{ $category->name }}
                                         </label>
@@ -368,6 +356,14 @@
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">{{ __('torrent.type') }}</legend>
                             <div class="form__fieldset-checkbox-container">
+                                @php
+                                    $types = cache()->remember(
+                                        'types',
+                                        3_600,
+                                        fn () => App\Models\Type::orderBy('position')->get()
+                                    )
+                                @endphp
+
                                 @foreach ($types as $type)
                                     <p class="form__group">
                                         <label class="form__label">
@@ -375,7 +371,7 @@
                                                 class="form__checkbox"
                                                 type="checkbox"
                                                 value="{{ $type->id }}"
-                                                wire:model.live="typeIds"
+                                                wire:model.live="types"
                                             />
                                             {{ $type->name }}
                                         </label>
@@ -388,6 +384,14 @@
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">{{ __('torrent.resolution') }}</legend>
                             <div class="form__fieldset-checkbox-container">
+                                @php
+                                    $resolutions = cache()->remember(
+                                        'resolutions',
+                                        3_600,
+                                        fn () => App\Models\Resolution::orderBy('position')->get()
+                                    )
+                                @endphp
+
                                 @foreach ($resolutions as $resolution)
                                     <p class="form__group">
                                         <label class="form__label">
@@ -395,7 +399,7 @@
                                                 class="form__checkbox"
                                                 type="checkbox"
                                                 value="{{ $resolution->id }}"
-                                                wire:model.live="resolutionIds"
+                                                wire:model.live="resolutions"
                                             />
                                             {{ $resolution->name }}
                                         </label>
@@ -408,6 +412,14 @@
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">{{ __('torrent.genre') }}</legend>
                             <div class="form__fieldset-checkbox-container">
+                                @php
+                                    $genres = cache()->remember(
+                                        'genres',
+                                        3_600,
+                                        fn () => App\Models\Genre::orderBy('name')->get()
+                                    )
+                                @endphp
+
                                 @foreach ($genres as $genre)
                                     <p class="form__group">
                                         <label class="form__label">
@@ -415,7 +427,7 @@
                                                 class="form__checkbox"
                                                 type="checkbox"
                                                 value="{{ $genre->id }}"
-                                                wire:model.live="genreIds"
+                                                wire:model.live="genres"
                                             />
                                             {{ $genre->name }}
                                         </label>
@@ -543,17 +555,6 @@
                                             wire:model.live="personalRelease"
                                         />
                                         {{ __('torrent.personal-release') }}
-                                    </label>
-                                </p>
-                                <p class="form__group">
-                                    <label class="form__label">
-                                        <input
-                                            class="form__checkbox"
-                                            type="checkbox"
-                                            value="1"
-                                            wire:model.live="trumpable"
-                                        />
-                                        Trumpable
                                     </label>
                                 </p>
                                 <p class="form__group">
@@ -731,6 +732,17 @@
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">Primary Language</legend>
                             <div class="form__fieldset-checkbox-container">
+                                @php
+                                    $primaryLanguages = cache()->remember(
+                                        'torrent-search:languages',
+                                        3600,
+                                        fn () => \App\Models\Movie::select('original_language')
+                                            ->distinct()
+                                            ->orderBy('original_language')
+                                            ->pluck('original_language')
+                                    )
+                                @endphp
+
                                 @foreach ($primaryLanguages as $primaryLanguage)
                                     <p class="form__group">
                                         <label class="form__label">
@@ -738,7 +750,7 @@
                                                 class="form__checkbox"
                                                 type="checkbox"
                                                 value="{{ $primaryLanguage }}"
-                                                wire:model.live="primaryLanguageNames"
+                                                wire:model.live="primaryLanguages"
                                             />
                                             {{ $primaryLanguage }}
                                         </label>
@@ -802,11 +814,11 @@
                         <thead>
                             <tr
                                 @class([
-                                    'torrent-search--list__headers' => auth()->user()->settings?->show_poster,
-                                    'torrent-search--list__no-poster-headers' => ! auth()->user()->settings?->show_poster,
+                                    'torrent-search--list__headers' => auth()->user()->show_poster,
+                                    'torrent-search--list__no-poster-headers' => ! auth()->user()->show_poster,
                                 ])
                             >
-                                @if (auth()->user()->settings?->show_poster)
+                                @if (auth()->user()->show_poster)
                                     <th class="torrent-search--list__poster-header">Poster</th>
                                 @endif
 
@@ -978,24 +990,22 @@
                 </table>
                 <div class="panel__body torrent-search--grouped__results">
                     @forelse ($torrents as $group)
-                        @isset($group, $group->id)
-                            @switch($group->meta)
-                                @case('movie')
-                                    <x-movie.card
-                                        :media="$group"
-                                        :personalFreeleech="$personalFreeleech"
-                                    />
+                        @switch($group->meta)
+                            @case('movie')
+                                <x-movie.card
+                                    :media="$group"
+                                    :personalFreeleech="$personalFreeleech"
+                                />
 
-                                    @break
-                                @case('tv')
-                                    <x-tv.card
-                                        :media="$group"
-                                        :personalFreeleech="$personalFreeleech"
-                                    />
+                                @break
+                            @case('tv')
+                                <x-tv.card
+                                    :media="$group"
+                                    :personalFreeleech="$personalFreeleech"
+                                />
 
-                                    @break
-                            @endswitch
-                        @endisset
+                                @break
+                        @endswitch
                     @empty
                         {{ __('common.no-result') }}
                     @endforelse
@@ -1077,7 +1087,7 @@
           let regions = document.querySelector('#regions')
           regions.addEventListener('change', () => {
             let data = regions.value
-            @this.set('regionIds', data)
+            @this.set('regions', data)
           })
 
           let myDistributors = [
@@ -1099,7 +1109,7 @@
           let distributors = document.querySelector('#distributors')
           distributors.addEventListener('change', () => {
             let data = distributors.value
-            @this.set('distributorIds', data)
+            @this.set('distributors', data)
           })
         })
     </script>

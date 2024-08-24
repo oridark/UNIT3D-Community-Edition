@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -23,7 +20,6 @@ use App\Models\Movie;
 use App\Models\PlaylistTorrent;
 use App\Models\Torrent;
 use App\Models\TorrentRequest;
-use App\Models\TorrentTrump;
 use App\Models\Tv;
 use App\Models\User;
 use App\Models\Wish;
@@ -102,10 +98,7 @@ trait TorrentFilter
      */
     public function scopeReleasedAfterOrIn(Builder $query, int $year): void
     {
-        $query->where(function ($query) use ($year): void {
-            $query->whereIn('tmdb', Movie::select('id')->whereYear('release_date', '>=', $year))
-                ->orWhereIn('tmdb', Tv::select('id')->whereYear('first_air_date', '>=', $year));
-        });
+        $query->where('release_year', '>=', $year);
     }
 
     /**
@@ -113,10 +106,7 @@ trait TorrentFilter
      */
     public function scopeReleasedBeforeOrIn(Builder $query, int $year): void
     {
-        $query->where(function ($query) use ($year): void {
-            $query->whereIn('tmdb', Movie::select('id')->whereYear('release_date', '<=', $year))
-                ->orWhereIn('tmdb', Tv::select('id')->whereYear('first_air_date', '<=', $year));
-        });
+        $query->where('release_year', '<=', $year);
     }
 
     /**
@@ -237,25 +227,9 @@ trait TorrentFilter
     /**
      * @param Builder<Torrent> $query
      */
-    public function scopeOfPlaylist(Builder $query, int $playlistId, ?User $authenticatedUser = null): void
+    public function scopeOfPlaylist(Builder $query, int $playlistId): void
     {
-        $authenticatedUser ??= auth()->user();
-
-        $query->whereIn(
-            'id',
-            PlaylistTorrent::select('torrent_id')
-                ->where('playlist_id', '=', $playlistId)
-                ->when(
-                    $authenticatedUser === null,
-                    fn ($query) => $query->whereRelation('playlist', 'is_private', '=', false),
-                    fn ($query) => $query->when(
-                        ! $authenticatedUser->group->is_modo,
-                        fn ($query) => $query->where(fn ($query) => $query
-                            ->whereRelation('playlist', 'is_private', '=', false)
-                            ->orWhereRelation('playlist', 'user_id', '=', $authenticatedUser->id))
-                    )
-                )
-        );
+        $query->whereIn('id', PlaylistTorrent::select('torrent_id')->where('playlist_id', '=', $playlistId));
     }
 
     /**
@@ -339,6 +313,14 @@ trait TorrentFilter
     /**
      * @param Builder<Torrent> $query
      */
+    public function scopeOfRefundable(Builder $query, int $refundable): void
+    {
+        $query->where('refundable', '=', $refundable);
+    }
+
+    /**
+     * @param Builder<Torrent> $query
+     */
     public function scopeStreamOptimized(Builder $query): void
     {
         $query->where('stream', '=', 1);
@@ -390,14 +372,6 @@ trait TorrentFilter
     public function scopePersonalRelease(Builder $query): void
     {
         $query->where('personal_release', '=', 1);
-    }
-
-    /**
-     * @param Builder<Torrent> $query
-     */
-    public function scopeTrumpable(Builder $query): void
-    {
-        $query->whereIn('id', TorrentTrump::select('torrent_id'));
     }
 
     /**
@@ -537,7 +511,7 @@ trait TorrentFilter
 
     /**
      * @param Builder<Torrent> $query
-     * @param array<string>    $languages
+     * @param array<int>       $languages
      */
     public function scopeOfPrimaryLanguage(Builder $query, array $languages): void
     {

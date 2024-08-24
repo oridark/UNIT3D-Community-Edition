@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -59,13 +56,14 @@ class FortifyServiceProvider extends ServiceProvider
 
                 if ($user->group_id == $disabledGroup[0]) {
                     $user->group_id = $memberGroup[0];
+                    $user->can_upload = 1;
                     $user->can_download = 1;
+                    $user->can_comment = 1;
+                    $user->can_invite = 1;
+                    $user->can_request = 1;
+                    $user->can_chat = 1;
                     $user->disabled_at = null;
                     $user->save();
-
-                    cache()->forget('user:'.$user->passkey);
-
-                    Unit3dAnnounce::addUser($user);
 
                     return to_route('home.index')
                         ->withSuccess(trans('auth.welcome-restore'));
@@ -81,7 +79,7 @@ class FortifyServiceProvider extends ServiceProvider
                 if ($rootUrlOverride = config('unit3d.root_url_override')) {
                     $url = redirect()->getIntendedUrl();
 
-                    return $url === null ? $rootUrlOverride : redirect(
+                    return redirect(
                         rtrim(
                             rtrim($rootUrlOverride, '/')
                             .parse_url($url, PHP_URL_PATH)
@@ -99,10 +97,6 @@ class FortifyServiceProvider extends ServiceProvider
         $this->app->instance(RegisterViewResponse::class, new class () implements RegisterViewResponse {
             public function toResponse($request): \Illuminate\Http\RedirectResponse|\Illuminate\View\View
             {
-                if ($request->missing('code')) {
-                    return view('auth.register');
-                }
-
                 return view('auth.register', ['code' => $request->query('code')]);
             }
         });
@@ -118,15 +112,18 @@ class FortifyServiceProvider extends ServiceProvider
 
                 if ($user->group_id !== $bannedGroup[0]) {
                     if ($user->group_id === $validatingGroup[0]) {
+                        $user->can_upload = 1;
                         $user->can_download = 1;
+                        $user->can_request = 1;
+                        $user->can_comment = 1;
+                        $user->can_invite = 1;
                         $user->group_id = $memberGroup[0];
-                        $user->active = true;
-                        $user->save();
-
-                        cache()->forget('user:'.$user->passkey);
-
-                        Unit3dAnnounce::addUser($user);
+                        $user->active = 1;
                     }
+
+                    $user->save();
+
+                    Unit3dAnnounce::addUser($user);
 
                     return to_route('login')
                         ->withSuccess(trans('auth.activation-success'));
@@ -192,7 +189,7 @@ class FortifyServiceProvider extends ServiceProvider
                 ]);
 
                 $user->notify(new FailedLogin(
-                    $request->ip() ?? 'Invalid IP'
+                    $request->ip()
                 ));
 
                 throw ValidationException::withMessages([
@@ -204,7 +201,7 @@ class FortifyServiceProvider extends ServiceProvider
                 // Check if user is activated
                 $validatingGroup = cache()->rememberForever('validating_group', fn () => Group::query()->where('slug', '=', 'validating')->pluck('id'));
 
-                if ($user->active === false || $user->group_id === $validatingGroup[0]) {
+                if ($user->active == 0 || $user->group_id === $validatingGroup[0]) {
                     $request->session()->invalidate();
 
                     throw ValidationException::withMessages([

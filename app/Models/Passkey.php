@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -46,7 +43,7 @@ class Passkey extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{deleted_at: 'datetime'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -58,7 +55,7 @@ class Passkey extends Model
     /**
      * Has Many Torrents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

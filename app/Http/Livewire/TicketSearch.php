@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property \Illuminate\Pagination\LengthAwarePaginator $tickets
+ * @property \Illuminate\Contracts\Pagination\LengthAwarePaginator $tickets
  */
 class TicketSearch extends Component
 {
@@ -68,10 +65,10 @@ class TicketSearch extends Component
     }
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Ticket>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Ticket>
      */
     #[Computed]
-    final public function tickets(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function tickets(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Ticket::query()
             ->with(['user.group', 'staff.group', 'category', 'priority'])

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -28,70 +25,66 @@ use App\Traits\GroupedLastScope;
 use App\Traits\TorrentFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use voku\helper\AntiXSS;
 
 /**
  * App\Models\Torrent.
  *
- * @property string                          $info_hash
- * @property int                             $id
- * @property string                          $name
- * @property string                          $description
- * @property string|null                     $mediainfo
- * @property string|null                     $bdinfo
- * @property string                          $file_name
- * @property int                             $num_file
- * @property string|null                     $folder
- * @property float                           $size
- * @property mixed|null                      $nfo
- * @property int                             $leechers
- * @property int                             $seeders
- * @property int                             $times_completed
- * @property int|null                        $category_id
- * @property int                             $user_id
- * @property int                             $imdb
- * @property int                             $tvdb
- * @property int                             $tmdb
- * @property int                             $mal
- * @property int                             $igdb
- * @property int|null                        $season_number
- * @property int|null                        $episode_number
- * @property int                             $stream
- * @property int                             $free
- * @property bool                            $doubleup
- * @property bool                            $refundable
- * @property int                             $highspeed
- * @property bool                            $featured
- * @property int                             $status
- * @property \Illuminate\Support\Carbon|null $moderated_at
- * @property int|null                        $moderated_by
- * @property int                             $anon
- * @property bool                            $sticky
- * @property int                             $sd
- * @property int                             $internal
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $bumped_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property \Illuminate\Support\Carbon|null $fl_until
- * @property \Illuminate\Support\Carbon|null $du_until
- * @property int                             $type_id
- * @property int|null                        $resolution_id
- * @property int|null                        $distributor_id
- * @property int|null                        $region_id
- * @property int                             $personal_release
- * @property int|null                        $balance
- * @property int|null                        $balance_offset
+ * @property string                                                                     $info_hash
+ * @property int                                                                        $id
+ * @property string                                                                     $name
+ * @property string                                                                     $description
+ * @property string|null                                                                $mediainfo
+ * @property string|null                                                                $bdinfo
+ * @property string                                                                     $file_name
+ * @property int                                                                        $num_file
+ * @property string|null                                                                $folder
+ * @property float                                                                      $size
+ * @property mixed|null                                                                 $nfo
+ * @property int                                                                        $leechers
+ * @property int                                                                        $seeders
+ * @property int                                                                        $times_completed
+ * @property int|null                                                                   $category_id
+ * @property int                                                                        $user_id
+ * @property int                                                                        $imdb
+ * @property int                                                                        $tvdb
+ * @property int                                                                        $tmdb
+ * @property int                                                                        $mal
+ * @property int                                                                        $igdb
+ * @property int|null                                                                   $season_number
+ * @property int|null                                                                   $episode_number
+ * @property int                                                                        $stream
+ * @property int                                                                        $free
+ * @property bool                                                                       $doubleup
+ * @property bool                                                                       $refundable
+ * @property int                                                                        $highspeed
+ * @property \Illuminate\Database\Eloquent\Collection<int, \App\Models\FeaturedTorrent> $featured
+ * @property int                                                                        $status
+ * @property \Illuminate\Support\Carbon|null                                            $moderated_at
+ * @property int|null                                                                   $moderated_by
+ * @property int                                                                        $anon
+ * @property bool                                                                       $sticky
+ * @property int                                                                        $sd
+ * @property int                                                                        $internal
+ * @property \Illuminate\Support\Carbon|null                                            $created_at
+ * @property \Illuminate\Support\Carbon|null                                            $updated_at
+ * @property string|null                                                                $bumped_at
+ * @property \Illuminate\Support\Carbon|null                                            $fl_until
+ * @property \Illuminate\Support\Carbon|null                                            $du_until
+ * @property string|null                                                                $release_year
+ * @property int                                                                        $type_id
+ * @property int|null                                                                   $resolution_id
+ * @property int|null                                                                   $distributor_id
+ * @property int|null                                                                   $region_id
+ * @property int                                                                        $personal_release
+ * @property int|null                                                                   $balance
+ * @property int|null                                                                   $balance_offset
  */
 class Torrent extends Model
 {
     use Auditable;
     use GroupedLastScope;
-
-    /** @use HasFactory<\Database\Factories\TorrentFactory> */
     use HasFactory;
-    use SoftDeletes;
     use TorrentFilter;
 
     protected $guarded = [];
@@ -99,21 +92,19 @@ class Torrent extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{tmdb: 'int', igdb: 'int', bumped_at: 'datetime', fl_until: 'datetime', du_until: 'datetime', doubleup: 'bool', refundable: 'bool', featured: 'bool', moderated_at: 'datetime', sticky: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'tmdb'         => 'int',
-            'igdb'         => 'int',
-            'bumped_at'    => 'datetime',
+            'igdb'         => 'integer',
             'fl_until'     => 'datetime',
             'du_until'     => 'datetime',
-            'doubleup'     => 'bool',
-            'refundable'   => 'bool',
-            'featured'     => 'bool',
+            'doubleup'     => 'boolean',
+            'refundable'   => 'boolean',
+            'featured'     => 'boolean',
             'moderated_at' => 'datetime',
-            'sticky'       => 'bool',
+            'sticky'       => 'boolean',
         ];
     }
 
@@ -139,7 +130,7 @@ class Torrent extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -152,7 +143,7 @@ class Torrent extends Model
     /**
      * Belongs To A Category.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Category, self>
      */
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -162,7 +153,7 @@ class Torrent extends Model
     /**
      * Belongs To A Type.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Type, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Type, self>
      */
     public function type(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -172,7 +163,7 @@ class Torrent extends Model
     /**
      * Belongs To A Resolution.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Resolution, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Resolution, self>
      */
     public function resolution(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -182,7 +173,7 @@ class Torrent extends Model
     /**
      * Belongs To A Distributor.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Distributor, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Distributor, self>
      */
     public function distributor(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -192,7 +183,7 @@ class Torrent extends Model
     /**
      * Belongs To A Region.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Region, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Region, self>
      */
     public function region(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -202,7 +193,7 @@ class Torrent extends Model
     /**
      * Belongs To A Movie.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Movie, self>
      */
     public function movie(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -212,7 +203,7 @@ class Torrent extends Model
     /**
      * Belongs To A Tv.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Tv, self>
      */
     public function tv(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -222,7 +213,7 @@ class Torrent extends Model
     /**
      * Belongs To A Playlist.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Playlist, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Playlist>
      */
     public function playlists(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -232,7 +223,7 @@ class Torrent extends Model
     /**
      * Torrent Has Been Moderated By.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function moderated(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -245,7 +236,7 @@ class Torrent extends Model
     /**
      * Has Many Keywords.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Keyword, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Keyword>
      */
     public function keywords(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -255,7 +246,7 @@ class Torrent extends Model
     /**
      * Has Many History.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<History, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<History>
      */
     public function history(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -265,7 +256,7 @@ class Torrent extends Model
     /**
      * Has Many Tips.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentTip, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentTip>
      */
     public function tips(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -275,7 +266,7 @@ class Torrent extends Model
     /**
      * Has Many Thank.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Thank, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Thank>
      */
     public function thanks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -285,7 +276,7 @@ class Torrent extends Model
     /**
      * Has Many HitRuns.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Warning, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Warning>
      */
     public function hitrun(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -295,7 +286,7 @@ class Torrent extends Model
     /**
      * Has Many Featured.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<FeaturedTorrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<FeaturedTorrent>
      */
     public function featured(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -305,7 +296,7 @@ class Torrent extends Model
     /**
      * Has Many Files.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentFile, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentFile>
      */
     public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -313,7 +304,7 @@ class Torrent extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Comment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Comment>
      */
     public function comments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
@@ -323,7 +314,7 @@ class Torrent extends Model
     /**
      * Has Many Peers.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Peer, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Peer>
      */
     public function peers(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -333,7 +324,7 @@ class Torrent extends Model
     /**
      * Has Many Seeds.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Peer, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Peer>
      */
     public function seeds(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -343,7 +334,7 @@ class Torrent extends Model
     /**
      * Has Many Leeches.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Peer, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Peer>
      */
     public function leeches(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -353,7 +344,7 @@ class Torrent extends Model
     /**
      * Has Many Subtitles.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Subtitle, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Subtitle>
      */
     public function subtitles(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -363,7 +354,7 @@ class Torrent extends Model
     /**
      * Relationship To Many Requests.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TorrentRequest>
      */
     public function requests(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -373,7 +364,7 @@ class Torrent extends Model
     /**
      * Has many free leech tokens.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<FreeleechToken, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<FreeleechToken>
      */
     public function freeleechTokens(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -383,7 +374,7 @@ class Torrent extends Model
     /**
      * Bookmarks.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Bookmark, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Bookmark>
      */
     public function bookmarks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -393,7 +384,7 @@ class Torrent extends Model
     /**
      * Bookmarks.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Resurrection, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Resurrection>
      */
     public function resurrections(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -401,21 +392,11 @@ class Torrent extends Model
     }
 
     /**
-     * Trump.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<TorrentTrump, $this>
-     */
-    public function trump(): \Illuminate\Database\Eloquent\Relations\HasOne
-    {
-        return $this->hasOne(TorrentTrump::class);
-    }
-
-    /**
      * Set The Torrents Description After Its Been Purified.
      */
     public function setDescriptionAttribute(?string $value): void
     {
-        $this->attributes['description'] = $value === null ? null : htmlspecialchars((new AntiXSS())->xss_clean($value), ENT_NOQUOTES);
+        $this->attributes['description'] = htmlspecialchars((new AntiXSS())->xss_clean($value), ENT_NOQUOTES);
     }
 
     /**
@@ -462,7 +443,7 @@ class Torrent extends Model
                 break;
             case $payload instanceof Comment:
                 if ($user->acceptsNotification(auth()->user(), $user, 'torrent', 'show_torrent_comment')) {
-                    $user->notify(new NewComment($this, $payload));
+                    $user->notify(new NewComment('torrent', $payload));
                 }
 
                 break;

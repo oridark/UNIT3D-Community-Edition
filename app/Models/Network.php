@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -32,7 +29,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Network extends Model
 {
-    /** @use HasFactory<\Database\Factories\NetworkFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -40,7 +36,7 @@ class Network extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Tv>
      */
     public function tv(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -48,7 +44,7 @@ class Network extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Movie>
      */
     public function movie(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

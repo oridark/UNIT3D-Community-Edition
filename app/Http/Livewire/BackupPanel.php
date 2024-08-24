@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,9 +31,6 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BackupPanel extends Component
 {
-    /**
-     * @var array<string, string>
-     */
     protected $listeners = ['refreshBackups' => '$refresh'];
 
     /**

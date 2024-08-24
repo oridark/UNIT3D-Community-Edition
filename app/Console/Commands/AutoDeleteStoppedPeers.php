@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -16,10 +13,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
+use App\Models\Peer;
 use Illuminate\Console\Command;
 use Exception;
-use Illuminate\Support\Facades\DB;
-use Throwable;
 
 class AutoDeleteStoppedPeers extends Command
 {
@@ -40,16 +36,11 @@ class AutoDeleteStoppedPeers extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception|Throwable If there is an error during the execution of the command.
+     * @throws Exception
      */
-    final public function handle(): void
+    public function handle(): void
     {
-        DB::transaction(static function (): void {
-            DB::table('peers')
-                ->where('active', '=', 0)
-                ->where('updated_at', '>', now()->subHours(2))
-                ->delete();
-        }, 5);
+        Peer::where('active', '=', 0)->where('updated_at', '>', now()->subHours(2))->delete();
 
         $this->comment('Automated delete stopped peers command complete');
     }

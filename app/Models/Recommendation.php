@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -35,7 +32,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Recommendation extends Model
 {
-    /** @use HasFactory<\Database\Factories\RecommendationFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -43,7 +39,7 @@ class Recommendation extends Model
     public $timestamps = false;
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Movie, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Movie, self>
      */
     public function movie(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -51,7 +47,7 @@ class Recommendation extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Tv, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Tv, self>
      */
     public function tv(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -24,7 +21,6 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int   $id
  * @property int   $user_id
- * @property int   $block_notifications
  * @property int   $show_bon_gift
  * @property int   $show_mention_forum_post
  * @property int   $show_mention_article_comment
@@ -57,7 +53,6 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserNotification extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserNotificationFactory> */
     use HasFactory;
 
     /**
@@ -68,16 +63,9 @@ class UserNotification extends Model
     public $timestamps = false;
 
     /**
-     * The attributes that aren't mass assignable.
-     *
-     * @var string[]
-     */
-    protected $guarded = [];
-
-    /**
      * Get the attributes that should be cast.
      *
-     * @return array{json_account_groups: 'array', json_mention_groups: 'array', json_request_groups: 'array', json_torrent_groups: 'array', json_forum_groups: 'array', json_following_groups: 'array', json_subscription_groups: 'array', json_bon_groups: 'array'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
@@ -96,10 +84,45 @@ class UserNotification extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id')->withDefault([
+            'username' => 'System',
+            'id'       => '1',
+        ]);
+    }
+
+    /**
+     * Get the Expected groups for form validation.
+     *
+     * @return array{}
+     */
+    public function getExpectedGroupsAttribute(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get the Expected fields for form validation.
+     *
+     * @return array{}
+     */
+    public function getExpectedFieldsAttribute(): array
+    {
+        return [];
+    }
+
+    /**
+     * Set the base vars on object creation without touching boot.
+     */
+    public function setDefaultValues(string $type = 'default'): void
+    {
+        foreach ($this->casts as $k => $v) {
+            if ($v == 'array') {
+                $this->$k = $this->expected_groups;
+            }
+        }
     }
 }

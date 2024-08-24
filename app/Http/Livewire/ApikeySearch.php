@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,7 +22,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 /**
- * @property \Illuminate\Pagination\LengthAwarePaginator<Apikey> $apikeys
+ * @property \Illuminate\Contracts\Pagination\LengthAwarePaginator<Apikey> $apikeys
  */
 class ApikeySearch extends Component
 {
@@ -50,10 +47,10 @@ class ApikeySearch extends Component
     public int $perPage = 25;
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<Apikey>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<Apikey>
      */
     #[Computed]
-    final public function apikeys(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function apikeys(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return Apikey::with([
             'user' => fn ($query) => $query->withTrashed()->with('group'),

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -41,8 +38,6 @@ use Illuminate\Database\Eloquent\Model;
 class Forum extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\ForumFactory> */
     use HasFactory;
 
     /**
@@ -55,7 +50,7 @@ class Forum extends Model
     /**
      * Has Many Topic.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Topic, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Topic>
      */
     public function topics(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -65,7 +60,7 @@ class Forum extends Model
     /**
      * Returns The Category In Which The Forum Is Located.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<ForumCategory, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<ForumCategory, self>
      */
     public function category(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -75,7 +70,7 @@ class Forum extends Model
     /**
      * All posts inside the forum.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Post, Topic, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<Post>
      */
     public function posts(): \Illuminate\Database\Eloquent\Relations\HasManyThrough
     {
@@ -85,7 +80,7 @@ class Forum extends Model
     /**
      * Latest topic.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Topic, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Topic>
      */
     public function lastRepliedTopicSlow(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
@@ -95,7 +90,7 @@ class Forum extends Model
     /**
      * Latest topic.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Topic, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Topic, self>
      */
     public function lastRepliedTopic(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -105,7 +100,7 @@ class Forum extends Model
     /**
      * Latest poster.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function latestPoster(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -115,7 +110,7 @@ class Forum extends Model
     /**
      * Has Many Subscriptions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Subscription, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Subscription>
      */
     public function subscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -125,7 +120,7 @@ class Forum extends Model
     /**
      * Has Many Permissions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ForumPermission, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ForumPermission>
      */
     public function permissions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -135,7 +130,7 @@ class Forum extends Model
     /**
      * Belongs To Many Subscribed Users.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User>
      */
     public function subscribedUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -26,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int                             $id
  * @property string                          $name
  * @property string|null                     $state
- * @property int                             $priority
+ * @property bool                            $pinned
  * @property bool                            $approved
  * @property bool                            $denied
  * @property bool                            $solved
@@ -47,8 +44,6 @@ use Illuminate\Database\Eloquent\Model;
 class Topic extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\TopicFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -56,27 +51,27 @@ class Topic extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{last_post_created_at: 'datetime', priority: 'integer', approved: 'bool', denied: 'bool', solved: 'bool', invalid: 'bool', bug: 'bool', suggestion: 'bool', implemented: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
             'last_post_created_at' => 'datetime',
-            'priority'             => 'integer',
-            'approved'             => 'bool',
-            'denied'               => 'bool',
-            'solved'               => 'bool',
-            'invalid'              => 'bool',
-            'bug'                  => 'bool',
-            'suggestion'           => 'bool',
-            'implemented'          => 'bool',
+            'pinned'               => 'boolean',
+            'approved'             => 'boolean',
+            'denied'               => 'boolean',
+            'solved'               => 'boolean',
+            'invalid'              => 'boolean',
+            'bug'                  => 'boolean',
+            'suggestion'           => 'boolean',
+            'implemented'          => 'boolean',
         ];
     }
 
     /**
      * Belongs To A Forum.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Forum, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Forum, self>
      */
     public function forum(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -86,7 +81,7 @@ class Topic extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -96,7 +91,7 @@ class Topic extends Model
     /**
      * Has Many Posts.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Post, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Post>
      */
     public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -106,7 +101,7 @@ class Topic extends Model
     /**
      * Has Many Posts.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TopicRead, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<TopicRead>
      */
     public function reads(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -116,7 +111,7 @@ class Topic extends Model
     /**
      * Has Many Subscriptions.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Subscription, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Subscription>
      */
     public function subscriptions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -126,7 +121,7 @@ class Topic extends Model
     /**
      * Has One Permissions through Forum.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ForumPermission, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<ForumPermission>
      */
     public function forumPermissions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -136,7 +131,7 @@ class Topic extends Model
     /**
      * Belongs to Many Subscribed Users.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<User>
      */
     public function subscribedUsers(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -146,7 +141,7 @@ class Topic extends Model
     /**
      * Latest post.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Post, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne<Post>
      */
     public function latestPostSlow(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
@@ -156,7 +151,7 @@ class Topic extends Model
     /**
      * Latest post.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Post, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Post, self>
      */
     public function latestPost(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -166,7 +161,7 @@ class Topic extends Model
     /**
      * Latest poster.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function latestPoster(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -206,6 +201,6 @@ class Topic extends Model
             return true;
         }
 
-        return $this->forum->getPermission()?->read_topic ?? false;
+        return $this->forum->getPermission()?->read_topic;
     }
 }

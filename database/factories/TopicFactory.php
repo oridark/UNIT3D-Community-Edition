@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -36,7 +33,7 @@ class TopicFactory extends Factory
         return [
             'name'                 => $this->faker->name(),
             'state'                => $this->faker->word(),
-            'priority'             => $this->faker->randomNumber(),
+            'pinned'               => $this->faker->boolean(),
             'approved'             => $this->faker->boolean(),
             'denied'               => $this->faker->boolean(),
             'solved'               => $this->faker->boolean(),

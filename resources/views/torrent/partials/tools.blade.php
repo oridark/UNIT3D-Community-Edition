@@ -317,7 +317,7 @@
                         </form>
                     </li>
                     <li>
-                        @if ($torrent->featured === false)
+                        @if ($torrent->featured == 0)
                             <form
                                 method="POST"
                                 action="{{ route('torrent_feature', ['id' => $torrent->id]) }}"

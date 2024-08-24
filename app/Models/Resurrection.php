@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -34,8 +31,6 @@ use Illuminate\Database\Eloquent\Model;
 class Resurrection extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\ResurrectionFactory> */
     use HasFactory;
 
     /**
@@ -48,19 +43,19 @@ class Resurrection extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{rewarded: 'bool'}
+     * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'rewarded' => 'bool',
+            'rewarded' => 'boolean',
         ];
     }
 
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -70,7 +65,7 @@ class Resurrection extends Model
     /**
      * Belongs To A Torrent.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Torrent, self>
      */
     public function torrent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

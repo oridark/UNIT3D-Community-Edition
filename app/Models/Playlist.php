@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -41,8 +38,6 @@ use voku\helper\AntiXSS;
 class Playlist extends Model
 {
     use Auditable;
-
-    /** @use HasFactory<\Database\Factories\PlaylistFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -50,7 +45,7 @@ class Playlist extends Model
     /**
      * Belongs To A User.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, self>
      */
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -63,7 +58,7 @@ class Playlist extends Model
     /**
      * Has Many Torrents.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Torrent, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany<Torrent>
      */
     public function torrents(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -71,7 +66,7 @@ class Playlist extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Comment, $this>
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany<Comment>
      */
     public function comments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
@@ -83,7 +78,7 @@ class Playlist extends Model
      */
     public function setDescriptionAttribute(?string $value): void
     {
-        $this->attributes['description'] = $value === null ? null : htmlspecialchars((new AntiXSS())->xss_clean($value), ENT_NOQUOTES);
+        $this->attributes['description'] = htmlspecialchars((new AntiXSS())->xss_clean($value), ENT_NOQUOTES);
     }
 
     /**

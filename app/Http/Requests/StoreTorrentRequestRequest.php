@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -48,8 +45,7 @@ class StoreTorrentRequestRequest extends FormRequest
             'imdb' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
                 ]),
                 Rule::when(!($category->movie_meta || $category->tv_meta), [
                     Rule::in([0]),
@@ -58,8 +54,8 @@ class StoreTorrentRequestRequest extends FormRequest
             'tvdb' => [
                 Rule::when($category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!$category->tv_meta, [
                     Rule::in([0]),
@@ -68,8 +64,8 @@ class StoreTorrentRequestRequest extends FormRequest
             'tmdb' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!($category->movie_meta || $category->tv_meta), [
                     Rule::in([0]),
@@ -78,8 +74,8 @@ class StoreTorrentRequestRequest extends FormRequest
             'mal' => [
                 Rule::when($category->movie_meta || $category->tv_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!($category->movie_meta || $category->tv_meta), [
                     Rule::in([0]),
@@ -88,8 +84,8 @@ class StoreTorrentRequestRequest extends FormRequest
             'igdb' => [
                 Rule::when($category->game_meta, [
                     'required',
-                    'decimal:0',
-                    'min:0',
+                    'numeric',
+                    'integer',
                 ]),
                 Rule::when(!$category->game_meta, [
                     Rule::in([0]),

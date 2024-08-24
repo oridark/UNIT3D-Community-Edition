@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -25,15 +22,13 @@ class RejectApplicationRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, array<string|\Illuminate\Validation\Rules\In>>
+     * @return array<string, \Illuminate\Contracts\Validation\Rule|array<\Illuminate\Contracts\Validation\Rule|string>|string>
      */
     public function rules(): array
     {
         return [
-            'status' => [
-                Rule::in([Application::REJECTED]),
-            ],
-            'deny' => [
+            'status' => Rule::in([Application::REJECTED]),
+            'deny'   => [
                 'required',
             ],
         ];

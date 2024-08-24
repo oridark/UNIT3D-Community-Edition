@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -44,10 +41,10 @@ class EmailUpdateSearch extends Component
     public int $perPage = 25;
 
     /**
-     * @return \Illuminate\Pagination\LengthAwarePaginator<EmailUpdate>
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<EmailUpdate>
      */
     #[Computed]
-    final public function emailUpdates(): \Illuminate\Pagination\LengthAwarePaginator
+    final public function emailUpdates(): \Illuminate\Contracts\Pagination\LengthAwarePaginator
     {
         return EmailUpdate::with([
             'user' => fn ($query) => $query->withTrashed()->with('group'),

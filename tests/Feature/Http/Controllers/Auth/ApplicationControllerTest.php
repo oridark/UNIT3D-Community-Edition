@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -29,27 +26,9 @@ test('store returns an ok response', function (): void {
     $application = Application::factory()->make();
 
     $response = $this->post(route('application.store'), [
-        'application' => [
-            'type'     => $application->type,
-            'email'    => $application->email,
-            'referrer' => $application->referrer,
-        ],
-        'images' => [
-            [
-                'image' => 'https://example.org/1',
-            ],
-            [
-                'image' => 'https://example.org/2',
-            ],
-        ],
-        'links' => [
-            [
-                'url' => 'https://example.org/1',
-            ],
-            [
-                'url' => 'https://example.org/2',
-            ],
-        ]
+        'type'     => $application->type,
+        'email'    => $application->email,
+        'referrer' => $application->referrer,
     ]);
     $response->assertRedirect(route('login'));
     $response->assertSessionHas('success', trans('auth.application-submitted'));
