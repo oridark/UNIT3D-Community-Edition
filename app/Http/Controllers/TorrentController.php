@@ -383,6 +383,8 @@ class TorrentController extends Controller
     {
         $user = $request->user();
         abort_if($user->can_upload === false || $user->group->can_upload == 0, 403, __('torrent.cant-upload').' '.__('torrent.cant-upload-desc'));
+        // abort_if($user->can_upload === true || $user->group->can_upload == 1, 403, __('torrent.cant-upload').' '.__('torrent.cant-upload-desc'));
+
 
         abort_if(\is_array($request->file('torrent')), 400);
 
@@ -508,7 +510,7 @@ class TorrentController extends Controller
 
             TorrentHelper::approveHelper($torrent->id);
         }
-
+        // return '';
         return to_route('download_check', ['id' => $torrent->id])
             ->withSuccess('Your torrent file is ready to be downloaded and seeded!');
     }

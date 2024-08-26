@@ -66,7 +66,7 @@ class Kernel extends HttpKernel
             'throttle:chat',
         ],
         'api' => [
-            'throttle:api',
+            'throttle:10000:1',
         ],
         'announce' => [
             'throttle:announce',
