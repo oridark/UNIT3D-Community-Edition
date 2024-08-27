@@ -12,9 +12,9 @@
     @endif
 
     @include('blocks.featured')
-    @livewire('random-media')
+    <!-- @livewire('random-media') -->
     @include('blocks.poll')
-    @livewire('top-torrents')
+    <!-- @livewire('top-torrents') -->
     @include('blocks.top_users')
     @include('blocks.latest_topics')
     @include('blocks.latest_posts')

@@ -25,7 +25,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Movie Collection',
+    'name' => '电影收藏馆',
 
     /*
     |--------------------------------------------------------------------------
