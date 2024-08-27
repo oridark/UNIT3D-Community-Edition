@@ -1,7 +1,7 @@
 <footer class="footer">
     <div class="footer__wrapper">
         <section class="footer__section">
-            <h2 class="footer__section-title">
+            <h2 class="footer__section-title top-nav__site-logo">
                 <b>{{ config('other.title') }}</b>
             </h2>
             <p>{{ config('other.meta_description') }}</p>
