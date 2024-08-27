@@ -75,16 +75,6 @@
                 <li>
                     <a href="{{ route('client_blacklist') }}">{{ __('common.blacklist') }}</a>
                 </li>
-                <li>
-                    <a href="{{ route('about') }}">{{ __('common.about') }}</a>
-                </li>
-                <li>
-                    <a
-                        href="https://github.com/HDInnovations/UNIT3D-Community-Edition/wiki/Torrent-API-(UNIT3D-v8.x.x)"
-                    >
-                        API Documentation
-                    </a>
-                </li>
             </ul>
         </section>
     </div>
