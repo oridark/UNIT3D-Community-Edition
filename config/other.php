@@ -161,7 +161,7 @@ return [
     | 11 = Revel
     | 12 = Material Design v3 Light
     */
-    'default_style' => 12,
+    'default_style' => 13,
 
     /*
     |--------------------------------------------------------------------------
