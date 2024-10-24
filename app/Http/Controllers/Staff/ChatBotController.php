@@ -80,7 +80,7 @@ class ChatBotController extends Controller
     public function disable(Bot $bot): \Illuminate\Http\RedirectResponse
     {
         $bot->update([
-            'active' => false,
+            'active' => 0,
         ]);
 
         return to_route('staff.bots.index')
@@ -93,7 +93,7 @@ class ChatBotController extends Controller
     public function enable(Bot $bot): \Illuminate\Http\RedirectResponse
     {
         $bot->update([
-            'active' => true,
+            'active' => 1,
         ]);
 
         return to_route('staff.bots.index')

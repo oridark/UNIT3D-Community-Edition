@@ -53,6 +53,4 @@ Route::middleware(['web', 'auth', 'banned', 'verified'])->group(function (): voi
         Route::post('/{postId}/like', [App\Http\Controllers\API\LikeController::class, 'store'])->name('api.posts.like.store');
         Route::post('/{postId}/dislike', [App\Http\Controllers\API\DislikeController::class, 'store'])->name('api.posts.dislike.store');
     });
-
-    Route::get('/quicksearch', [App\Http\Controllers\API\QuickSearchController::class, 'index'])->name('api.quicksearch');
 });

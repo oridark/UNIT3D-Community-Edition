@@ -104,10 +104,7 @@ class TorrentController extends Controller
                 'credits' => ['person', 'occupation'],
                 'companies',
                 'networks',
-                'recommendedTv' => fn ($query) => $query
-                    ->select('tv.id', 'tv.name', 'tv.poster', 'tv.first_air_date')
-                    ->withMin('torrents', 'category_id')
-                    ->has('torrents'),
+                'recommendedTv:id,name,poster,first_air_date'
             ])->find($torrent->tmdb);
         }
 
@@ -117,10 +114,7 @@ class TorrentController extends Controller
                 'credits' => ['person', 'occupation'],
                 'companies',
                 'collection',
-                'recommendedMovies' => fn ($query) => $query
-                    ->select('movies.id', 'movies.title', 'movies.poster', 'movies.release_date')
-                    ->withMin('torrents', 'category_id')
-                    ->has('torrents'),
+                'recommendedMovies:id,title,poster,release_date'
             ])
                 ->find($torrent->tmdb);
         }

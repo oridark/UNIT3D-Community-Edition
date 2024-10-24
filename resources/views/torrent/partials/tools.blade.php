@@ -250,7 +250,7 @@
                         </dialog>
                     </li>
                     <li>
-                        @if (! $torrent->refundable)
+                        @if ($torrent->refundable == 0)
                             <form
                                 action="{{ route('refundable', ['id' => $torrent->id]) }}"
                                 method="POST"

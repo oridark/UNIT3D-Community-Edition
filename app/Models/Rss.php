@@ -29,7 +29,7 @@ use stdClass;
  * @property int                             $position
  * @property string                          $name
  * @property int                             $user_id
- * @property bool                            $is_private
+ * @property int                             $is_private
  * @property int                             $is_torrent
  * @property array                           $json_torrent
  * @property \Illuminate\Support\Carbon|null $deleted_at
@@ -54,7 +54,7 @@ class Rss extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array{name: 'string', json_torrent: 'array', expected_fields: 'array', is_private: 'bool'}
+     * @return array{name: 'string', json_torrent: 'array', expected_fields: 'array'}
      */
     protected function casts(): array
     {
@@ -62,7 +62,6 @@ class Rss extends Model
             'name'            => 'string',
             'json_torrent'    => 'array',
             'expected_fields' => 'array',
-            'is_private'      => 'bool',
         ];
     }
 

@@ -347,7 +347,7 @@ trait TorrentFilter
      */
     public function scopeRefundable(Builder $query): void
     {
-        $query->where('refundable', '=', true);
+        $query->where('refundable', '=', 1);
     }
 
     /**
