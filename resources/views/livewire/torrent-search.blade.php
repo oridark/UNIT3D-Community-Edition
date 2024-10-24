@@ -111,7 +111,7 @@
                             </label>
                         </p>
                     </div>
-                    <div class="form__group--short-horizontal">
+                    <!-- <div class="form__group--short-horizontal">
                         <p class="form__group">
                             <input
                                 id="episodeNumber"
@@ -138,7 +138,7 @@
                                 {{ __('torrent.season-number') }}
                             </label>
                         </p>
-                    </div>
+                    </div> -->
                     <div class="form__group--short-horizontal">
                         <p class="form__group">
                             <input
@@ -218,7 +218,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="form__group--short-horizontal">
+                <!-- <div class="form__group--short-horizontal">
                     <div class="form__group">
                         <div id="regions" wire:ignore></div>
                     </div>
@@ -238,8 +238,8 @@
                         </select>
                         <label class="form__label form__label--floating" for="adult">Adult</label>
                     </p>
-                </div>
-                <div class="form__group--short-horizontal">
+                </div> -->
+                <!-- <div class="form__group--short-horizontal">
                     <p class="form__group">
                         <input
                             id="playlistId"
@@ -292,7 +292,7 @@
                             Network ID
                         </label>
                     </p>
-                </div>
+                </div> -->
                 <div class="form__group--short-horizontal">
                     <p class="form__group">
                         <input
@@ -320,7 +320,7 @@
                             IMDb ID
                         </label>
                     </p>
-                    <p class="form__group">
+                    <!-- <p class="form__group">
                         <input
                             id="tvdbId"
                             wire:model.live="tvdbId"
@@ -332,8 +332,8 @@
                         <label class="form__label form__label--floating" for="tvdbId">
                             TVDb ID
                         </label>
-                    </p>
-                    <p class="form__group">
+                    </p> -->
+                    <!-- <p class="form__group">
                         <input
                             id="malId"
                             wire:model.live="malId"
@@ -343,10 +343,10 @@
                             placeholder=" "
                         />
                         <label class="form__label form__label--floating" for="malId">MAL ID</label>
-                    </p>
+                    </p> -->
                 </div>
                 <div class="form__group--short-horizontal">
-                    <div class="form__group">
+                    <!-- <div class="form__group">
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">{{ __('torrent.category') }}</legend>
                             <div class="form__fieldset-checkbox-container">
@@ -365,7 +365,7 @@
                                 @endforeach
                             </div>
                         </fieldset>
-                    </div>
+                    </div> -->
                     <div class="form__group">
                         <fieldset class="form__fieldset">
                             <legend class="form__legend">{{ __('torrent.type') }}</legend>
