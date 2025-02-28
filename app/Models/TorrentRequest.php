@@ -19,6 +19,7 @@ namespace App\Models;
 use App\Helpers\Bbcode;
 use App\Helpers\Linkify;
 use App\Traits\Auditable;
+use App\Traits\TorrentFilter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use voku\helper\AntiXSS;
@@ -57,6 +58,7 @@ class TorrentRequest extends Model
 
     /** @use HasFactory<\Database\Factories\TorrentRequestFactory> */
     use HasFactory;
+    use TorrentFilter;
 
     /**
      * The Database Table Used By The Model.

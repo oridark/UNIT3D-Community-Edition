@@ -55,6 +55,7 @@
             class="panel__tab panel__tab--full-width"
             role="tab"
             x-bind:class="tab === 'all' && 'panel__tab--active'"
+            x-cloak
             x-on:click="tab = 'all'"
         >
             {{ __('stat.all') }}
@@ -63,6 +64,7 @@
             class="panel__tab panel__tab--full-width"
             role="tab"
             x-bind:class="tab === 'unread' && 'panel__tab--active'"
+            x-cloak
             x-on:click="tab = 'unread'"
         >
             {{ __('pm.unread') }}
@@ -71,6 +73,7 @@
             class="panel__tab panel__tab--full-width"
             role="tab"
             x-bind:class="tab === 'inbox' && 'panel__tab--active'"
+            x-cloak
             x-on:click="tab = 'inbox'"
         >
             {{ __('pm.inbox') }}
@@ -79,6 +82,7 @@
             class="panel__tab panel__tab--full-width"
             role="tab"
             x-bind:class="tab === 'outbox' && 'panel__tab--active'"
+            x-cloak
             x-on:click="tab = 'outbox'"
         >
             {{ __('pm.outbox') }}

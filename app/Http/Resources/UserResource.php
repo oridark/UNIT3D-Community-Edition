@@ -17,28 +17,15 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-/**
- * @mixin \App\Models\User
- */
 class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
      */
-    public function toArray($request): array
+    public function toArray($request): array|\Illuminate\Contracts\Support\Arrayable|JsonSerializable
     {
-        return [
-            'username'     => $this->username,
-            'group'        => $this->group->name,
-            'uploaded'     => str_replace("\u{00A0}", ' ', $this->formatted_uploaded),
-            'downloaded'   => str_replace("\u{00A0}", ' ', $this->formatted_downloaded),
-            'ratio'        => $this->formatted_ratio,
-            'buffer'       => str_replace("\u{00A0}", ' ', $this->formatted_buffer),
-            'seeding'      => \count($this->seedingTorrents),
-            'leeching'     => \count($this->leechingTorrents),
-            'seedbonus'    => $this->seedbonus,
-            'hit_and_runs' => $this->hitandruns,
-        ];
+        return parent::toArray($request);
     }
 }

@@ -42,7 +42,7 @@ return new class () extends Migration {
                     'cost',
                     'sender_id',
                     'receiver_id',
-                    DB::raw('CASE WHEN EXISTS(SELECT * FROM torrents WHERE id = torrent_id) THEN torrent_id END'),
+                    DB::raw('IF(EXISTS(SELECT * FROM torrents WHERE id = torrent_id), torrent_id, null)'),
                     'created_at',
                 ])
                 ->where('name', '=', 'tip')

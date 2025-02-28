@@ -1,5 +1,4 @@
 <?php
-
 /**
  * NOTICE OF LICENSE.
  *
@@ -28,7 +27,6 @@ use App\Models\Group;
 use App\Models\Peer;
 use App\Models\Scopes\ApprovedScope;
 use App\Models\Torrent;
-use App\Models\UnregisteredInfoHash;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -100,7 +98,7 @@ final class AnnounceController extends Controller
             $group = $this->checkGroup($user);
 
             // Get Torrent Info Array from queries and judge if user can reach it.
-            $torrent = $this->checkTorrent($queries->getInfoHash(), $user);
+            $torrent = $this->checkTorrent($queries->getInfoHash());
 
             // Check if a user is announcing a torrent as completed but no peer is in db.
             $this->checkPeer($torrent, $queries, $user);
@@ -387,7 +385,7 @@ final class AnnounceController extends Controller
      * @throws TrackerException
      * @throws Throwable
      */
-    private function checkTorrent(string $infoHash, User $user): Torrent
+    private function checkTorrent(string $infoHash): Torrent
     {
         $torrent = cache()->remember(
             'announce-torrents:by-infohash:'.$infoHash,
@@ -398,13 +396,8 @@ final class AnnounceController extends Controller
                 ->firstOr(fn (): string => '-1')
         );
 
-        // If Torrent Doesn't Exist Return Error to Client
+        // If Torrent Doesn't Exsist Return Error to Client
         if ($torrent === '-1') {
-            UnregisteredInfoHash::upsert([
-                'user_id'   => $user->id,
-                'info_hash' => $infoHash,
-            ], ['info_hash', 'user_id']);
-
             throw new TrackerException(150);
         }
 

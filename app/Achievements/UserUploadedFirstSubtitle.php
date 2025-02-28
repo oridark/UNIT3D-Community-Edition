@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Achievements;
 
 use Assada\Achievements\Achievement;
+use Assada\Achievements\Model\AchievementProgress;
 
 class UserUploadedFirstSubtitle extends Achievement
 {

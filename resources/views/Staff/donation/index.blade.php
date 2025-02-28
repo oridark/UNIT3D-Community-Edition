@@ -52,34 +52,13 @@
                                 <x-user_tag :user="$donation->user" :anon="false" />
                             </td>
                             <td>{{ $donation->transaction }}</td>
-                            <td
-                                class="{{ $donation->package->trashed() ? 'text-danger' : '' }}"
-                                title="{{ $donation->package->trashed() ? 'Package has been deleted' : '' }}"
-                            >
-                                $ {{ $donation->package->cost }}
-                            </td>
-                            <td
-                                class="{{ $donation->package->trashed() ? 'text-danger' : '' }}"
-                                title="{{ $donation->package->trashed() ? 'Package has been deleted' : '' }}"
-                            >
+                            <td>$ {{ $donation->package->cost }}</td>
+                            <td>
                                 {{ App\Helpers\StringHelper::formatBytes($donation->package->upload_value ?? 0) }}
                             </td>
-                            <td
-                                class="{{ $donation->package->trashed() ? 'text-danger' : '' }}"
-                                title="{{ $donation->package->trashed() ? 'Package has been deleted' : '' }}"
-                            >
-                                {{ $donation->package->invite_value ?? 0 }}
-                            </td>
-                            <td
-                                class="{{ $donation->package->trashed() ? 'text-danger' : '' }}"
-                                title="{{ $donation->package->trashed() ? 'Package has been deleted' : '' }}"
-                            >
-                                {{ $donation->package->bonus_value ?? 0 }}
-                            </td>
-                            <td
-                                class="{{ $donation->package->trashed() ? 'text-danger' : '' }}"
-                                title="{{ $donation->package->trashed() ? 'Package has been deleted' : '' }}"
-                            >
+                            <td>{{ $donation->package->invite_value ?? 0 }}</td>
+                            <td>{{ $donation->package->bonus_value ?? 0 }}</td>
+                            <td>
                                 @if ($donation->package->donor_value === null)
                                     Lifetime
                                 @else
@@ -145,7 +124,6 @@
 @endsection
 
 @section('scripts')
-    @vite('resources/js/vendor/chart.js')
     <script nonce="{{ HDVinnie\SecureHeaders\SecureHeaders::nonce('script') }}">
         document.addEventListener('DOMContentLoaded', function () {
             const dailyDonations = {!! Js::encode($dailyDonations) !!};

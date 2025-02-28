@@ -70,9 +70,9 @@
         <h2 class="panel__heading">{{ __('common.users') }}</h2>
         <div class="panel__body">
             <ul>
-                @foreach ($conversation->users as $conversationUser)
+                @foreach ($conversation->users as $user)
                     <li>
-                        <x-user_tag :user="$conversationUser" :anon="false" />
+                        <x-user_tag :user="$user" :anon="false" />
                     </li>
                 @endforeach
             </ul>

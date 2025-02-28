@@ -38,172 +38,144 @@ class StoreGroupRequest extends FormRequest
     public function rules(Request $request): array
     {
         return [
-            'group.name' => [
+            'name' => [
                 'required',
                 'string',
-                'unique:groups,name',
+                'unique:groups',
             ],
-            'group.position' => [
+            'position' => [
                 'required',
                 'integer',
             ],
-            'group.level' => [
+            'level' => [
                 'required',
                 'integer',
             ],
-            'group.download_slots' => [
+            'download_slots' => [
                 'nullable',
                 'integer',
             ],
-            'group.description' => [
+            'description' => [
                 'nullable',
             ],
-            'group.color' => [
+            'color' => [
                 'required',
             ],
-            'group.icon' => [
+            'icon' => [
                 'required',
             ],
-            'group.effect' => [
+            'effect' => [
                 'sometimes',
             ],
-            'group.is_uploader' => [
+            'is_uploader' => [
                 'required',
                 'boolean',
             ],
-            'group.is_internal' => [
+            'is_internal' => [
                 'required',
                 'boolean',
             ],
-            'group.is_editor' => [
+            'is_editor' => [
                 'required',
                 'boolean',
             ],
-            'group.is_torrent_modo' => [
+            'is_modo' => [
                 'required',
                 'boolean',
             ],
-            'group.is_modo' => [
+            'is_admin' => [
                 'required',
                 'boolean',
             ],
-            'group.is_admin' => [
+            'is_owner' => [
                 'required',
                 'boolean',
             ],
-            'group.is_owner' => [
+            'is_trusted' => [
                 'required',
                 'boolean',
             ],
-            'group.is_trusted' => [
+            'is_immune' => [
                 'required',
                 'boolean',
             ],
-            'group.is_immune' => [
+            'is_freeleech' => [
                 'required',
                 'boolean',
             ],
-            'group.is_freeleech' => [
+            'is_double_upload' => [
                 'required',
                 'boolean',
             ],
-            'group.is_double_upload' => [
+            'is_incognito' => [
                 'required',
                 'boolean',
             ],
-            'group.is_incognito' => [
+            'can_chat' => [
                 'required',
                 'boolean',
             ],
-            'group.can_chat' => [
+            'can_comment' => [
                 'required',
                 'boolean',
             ],
-            'group.can_comment' => [
+            'can_invite' => [
                 'required',
                 'boolean',
             ],
-            'group.can_invite' => [
+            'can_request' => [
                 'required',
                 'boolean',
             ],
-            'group.can_request' => [
+            'can_upload' => [
                 'required',
                 'boolean',
             ],
-            'group.can_upload' => [
+            'autogroup' => [
                 'required',
                 'boolean',
             ],
-            'group.autogroup' => [
-                'required',
-                'boolean',
-            ],
-            'group.min_uploaded' => [
+            'min_uploaded' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'integer',
                     'min:0',
                 ], 'prohibited'),
             ],
-            'group.min_ratio' => [
+            'min_ratio' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'min:0',
                     'max:99.99',
                 ], 'prohibited'),
             ],
-            'group.min_age' => [
+            'min_age' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'integer',
                     'min:0',
                 ], 'prohibited'),
             ],
-            'group.min_avg_seedtime' => [
+            'min_avg_seedtime' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'integer',
                     'min:0',
                 ], 'prohibited'),
             ],
-            'group.min_seedsize' => [
+            'min_seedsize' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'integer',
                     'min:0',
                 ], 'prohibited'),
             ],
-            'group.min_uploads' => [
+            'min_uploads' => [
                 Rule::when($request->boolean('autogroup'), [
                     'sometimes',
                     'integer',
                     'min:0',
                 ], 'prohibited'),
-            ],
-            'permissions' => [
-                'required',
-                'array',
-            ],
-            'permissions.*' => [
-                'required',
-                'array:forum_id,read_topic,reply_topic,start_topic',
-            ],
-            'permissions.*.forum_id' => [
-                'required',
-                'exists:forums,id',
-            ],
-            'permissions.*.read_topic' => [
-                'required',
-                'boolean',
-            ],
-            'permissions.*.reply_topic' => [
-                'required',
-                'boolean',
-            ],
-            'permissions.*.start_topic' => [
-                'required',
-                'boolean',
             ],
         ];
     }

@@ -256,7 +256,6 @@
                                 <th>{{ __('torrent.started') }}</th>
                                 <th>{{ __('torrent.last-update') }}</th>
                                 <th>{{ __('torrent.peers') }}</th>
-                                <th>{{ __('torrent.size') }}</th>
                                 @if (\config('announce.connectable_check') === true)
                                     <th>Connectable</th>
                                 @endif
@@ -300,9 +299,6 @@
                                         >
                                             {{ $client->num_peers }}
                                         </a>
-                                    </td>
-                                    <td>
-                                        {{ App\Helpers\StringHelper::formatBytes($client->size) }}
                                     </td>
                                     @if (\config('announce.connectable_check') == true)
                                         @php

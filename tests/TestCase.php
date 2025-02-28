@@ -24,7 +24,6 @@ abstract class TestCase extends BaseTestCase
 {
     use AdditionalAssertions;
     use CreatesApplication;
-    use CreatesUsers;
     use LazilyRefreshDatabase;
 
     protected function setUp(): void

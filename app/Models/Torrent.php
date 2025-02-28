@@ -18,12 +18,14 @@ namespace App\Models;
 
 use App\Helpers\Bbcode;
 use App\Helpers\Linkify;
+use App\Helpers\MediaInfo;
 use App\Helpers\StringHelper;
 use App\Models\Scopes\ApprovedScope;
 use App\Notifications\NewComment;
 use App\Notifications\NewThank;
 use App\Traits\Auditable;
 use App\Traits\GroupedLastScope;
+use App\Traits\TorrentFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -93,6 +95,7 @@ class Torrent extends Model
     use HasFactory;
     use Searchable;
     use SoftDeletes;
+    use TorrentFilter;
 
     protected $guarded = [];
 
@@ -137,7 +140,7 @@ class Torrent extends Model
      * The fields it returns are used by Meilisearch to power the advanced
      * torrent search, quick search, RSS, and the API.
      */
-    public const string SEARCHABLE = <<<'SQL'
+    public const string SEARCHABLE = "
             torrents.id,
             torrents.name,
             torrents.description,
@@ -231,13 +234,13 @@ class Torrent extends Model
                     'username', users.username,
                     'group', (
                         SELECT JSON_OBJECT(
-                            'name', "groups".name,
-                            'color', "groups".color,
-                            'icon', "groups".icon,
-                            'effect', "groups".effect
+                            'name', `groups`.name,
+                            'color', `groups`.color,
+                            'icon', `groups`.icon,
+                            'effect', `groups`.effect
                         )
-                        FROM "groups"
-                        WHERE "groups".id = users.group_id
+                        FROM `groups`
+                        WHERE `groups`.id = users.group_id
                         LIMIT 1
                     )
                 )
@@ -460,7 +463,7 @@ class Torrent extends Model
                 FROM keywords
                 WHERE torrents.id = keywords.torrent_id
             ) AS json_keywords
-    SQL;
+        ";
 
     protected static function booted(): void
     {
@@ -722,23 +725,13 @@ class Torrent extends Model
     }
 
     /**
-     * Resurrections.
+     * Bookmarks.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<Resurrection, $this>
      */
     public function resurrections(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Resurrection::class);
-    }
-
-    /**
-     * Reports.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Report, $this>
-     */
-    public function reports(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(Report::class);
     }
 
     /**

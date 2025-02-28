@@ -32,9 +32,7 @@ class ClaimedPrizeController extends Controller
             return back()->withErrors('Event is not active.');
         }
 
-        $isAvailable = now()->isBetween($event->starts_at->startOfDay(), $event->ends_at->endOfDay());
-
-        if (!$isAvailable) {
+        if (!now()->isBetween($event->starts_at, $event->ends_at)) {
             return back()->withErrors('Prizes are not currently available.');
         }
 

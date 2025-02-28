@@ -100,7 +100,7 @@
             </ul>
         </div>
         <p class="torrent-card__plot">
-            {{ Str::of($meta?->overview ?: $meta?->summary)->stripTags()->limit(350, '...') }}
+            {{ Str::limit(strip_tags($meta?->overview ?: $meta?->summary), 350, '...') }}
         </p>
     </div>
     <footer class="torrent-card__footer">

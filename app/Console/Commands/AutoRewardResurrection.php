@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use App\Models\Resurrection;
+use App\Models\Torrent;
 use App\Repositories\ChatRepository;
 use App\Services\Unit3dAnnounce;
 use Exception;

@@ -34,9 +34,6 @@ return [
     // Latest Topics
     'latest-topics' => 'Latest Topics',
 
-    // Latest Comments
-    'latest-comments' => 'Latest Comments',
-
     // Users Online
     'active-in-last' => 'Active in last',
     'users-online'   => 'Users Online',

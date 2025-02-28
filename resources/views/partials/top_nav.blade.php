@@ -26,12 +26,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('torrents.pending') }}">
-                        <i class="{{ config('other.font-awesome') }} fa-hourglass-half"></i>
-                        {{ __('common.pending-torrents') }}
-                    </a>
-                </li>
-                <li>
                     <a href="{{ route('torrents.create') }}">
                         <i class="{{ config('other.font-awesome') }} fa-upload"></i>
                         {{ __('common.upload') }}
@@ -206,7 +200,7 @@
             <a tabindex="0">
                 <div class="top-nav--left__container">
                     {{ __('common.other') }}
-                    @if ($events->contains(fn ($event) => ! $event->claimed_prizes_exists && $event->ends_at->endOfDay()->isFuture()))
+                    @if ($events->contains(fn ($event) => ! $event->claimed_prizes_exists && $event->ends_at->isFuture()))
                         <x-animation.notification />
                     @endif
                 </div>
@@ -297,9 +291,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="https://square.link/u/VjB1CNfm" target="_blank">
+                        <a href="https://polar.sh/HDInnovations">
                             <i class="fas fa-handshake"></i>
-                            Support UNIT3D
+                            Support UNIT3D Development
                         </a>
                     </li>
                 </ul>
@@ -440,7 +434,7 @@
                 </li>
             @endif
 
-            @if (auth()->user()->group->is_torrent_modo)
+            @if (auth()->user()->group->is_modo)
                 <li>
                     <a
                         class="top-nav--right__icon-link"
@@ -624,14 +618,6 @@
                         <a href="{{ route('torrents.index', ['bookmarked' => 1]) }}">
                             <i class="{{ config('other.font-awesome') }} fa-bookmark"></i>
                             {{ __('user.my-bookmarks') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="{{ route('playlists.index', ['username' => auth()->user()->username]) }}"
-                        >
-                            <i class="{{ config('other.font-awesome') }} fa-list-ol"></i>
-                            {{ __('user.my-playlists') }}
                         </a>
                     </li>
                     <li>

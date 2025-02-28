@@ -51,6 +51,10 @@ class StoreEventRequest extends FormRequest
                 'required',
                 'date',
             ],
+            'active' => [
+                'required',
+                'boolean',
+            ],
         ];
     }
 }

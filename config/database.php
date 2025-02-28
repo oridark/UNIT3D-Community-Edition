@@ -56,10 +56,7 @@ return [
             'prefix_indexes' => true,
             'strict'         => true,
             'engine'         => null,
-            'modes'          => [
-                'ANSI',
-            ],
-            'options' => \extension_loaded('pdo_mysql') ? array_filter([
+            'options'        => \extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
             'dump' => [
@@ -177,7 +174,7 @@ return [
             'username'           => env('REDIS_USERNAME'),
             'password'           => env('REDIS_PASSWORD', null),
             'port'               => env('REDIS_PORT', 6379),
-            'database'           => env('REDIS_SESSION_DB', 4),
+            'database'           => env('REDIS_BROADCAST_DB', 4),
             'read_write_timeout' => -1,
         ],
 
@@ -187,7 +184,7 @@ return [
             'username'           => env('REDIS_USERNAME'),
             'password'           => env('REDIS_PASSWORD', null),
             'port'               => env('REDIS_PORT', 6379),
-            'database'           => env('REDIS_ANNOUNCE_DB', 5),
+            'database'           => env('REDIS_BROADCAST_DB', 5),
             'read_write_timeout' => -1,
         ],
     ],

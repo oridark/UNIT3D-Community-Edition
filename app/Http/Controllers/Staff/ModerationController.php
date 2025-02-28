@@ -43,20 +43,18 @@ class ModerationController extends Controller
      */
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\View\View
     {
-        abort_unless(auth()->user()->group->is_torrent_modo, 403);
-
         return view('Staff.moderation.index', [
             'current' => now(),
             'pending' => Torrent::withoutGlobalScope(ApprovedScope::class)
-                ->with(['user.group', 'category', 'type', 'resolution'])
+                ->with(['user.group', 'category', 'type', 'resolution', 'category'])
                 ->where('status', '=', Torrent::PENDING)
                 ->get(),
             'postponed' => Torrent::withoutGlobalScope(ApprovedScope::class)
-                ->with(['user.group', 'moderated.group', 'category', 'type', 'resolution'])
+                ->with(['user.group', 'moderated.group', 'category', 'type', 'resolution', 'category'])
                 ->where('status', '=', Torrent::POSTPONED)
                 ->get(),
             'rejected' => Torrent::withoutGlobalScope(ApprovedScope::class)
-                ->with(['user.group', 'moderated.group', 'category', 'type', 'resolution'])
+                ->with(['user.group', 'moderated.group', 'category', 'type', 'resolution', 'category'])
                 ->where('status', '=', Torrent::REJECTED)
                 ->get(),
         ]);
@@ -67,8 +65,6 @@ class ModerationController extends Controller
      */
     public function update(UpdateModerationRequest $request, int $id): \Illuminate\Http\RedirectResponse
     {
-        abort_unless(auth()->user()->group->is_torrent_modo, 403);
-
         $torrent = Torrent::withoutGlobalScope(ApprovedScope::class)->with('user')->findOrFail($id);
 
         if ($request->integer('old_status') !== $torrent->status) {

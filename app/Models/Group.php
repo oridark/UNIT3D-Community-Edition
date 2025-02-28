@@ -36,7 +36,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool     $is_uploader
  * @property bool     $is_internal
  * @property bool     $is_editor
- * @property bool     $is_torrent_modo
  * @property bool     $is_owner
  * @property bool     $is_admin
  * @property bool     $is_modo
@@ -74,7 +73,6 @@ class Group extends Model
      *     is_uploader: 'bool',
      *     is_internal: 'bool',
      *     is_editor: 'bool',
-     *     is_torrent_modo: 'bool',
      *     is_owner: 'bool',
      *     is_admin: 'bool',
      *     is_modo: 'bool',
@@ -100,7 +98,6 @@ class Group extends Model
             'is_uploader'      => 'bool',
             'is_internal'      => 'bool',
             'is_editor'        => 'bool',
-            'is_torrent_modo'  => 'bool',
             'is_owner'         => 'bool',
             'is_admin'         => 'bool',
             'is_modo'          => 'bool',

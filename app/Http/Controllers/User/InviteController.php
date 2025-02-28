@@ -101,9 +101,8 @@ class InviteController extends Controller
 
         $request->validate([
             'bail',
-            'message'       => 'required',
-            'internal_note' => Rule::unless($user->group->is_modo, 'missing'),
-            'email'         => [
+            'message' => 'required',
+            'email'   => [
                 'required',
                 'string',
                 'email',
@@ -118,12 +117,11 @@ class InviteController extends Controller
         $user->decrement('invites');
 
         $invite = Invite::create([
-            'user_id'       => $user->id,
-            'email'         => $request->input('email'),
-            'code'          => Uuid::uuid4()->toString(),
-            'internal_note' => $request->input('internal_note'),
-            'expires_on'    => now()->addDays(config('other.invite_expire')),
-            'custom'        => $request->input('message'),
+            'user_id'    => $user->id,
+            'email'      => $request->input('email'),
+            'code'       => Uuid::uuid4()->toString(),
+            'expires_on' => now()->addDays(config('other.invite_expire')),
+            'custom'     => $request->input('message'),
         ]);
 
         Mail::to($request->input('email'))->send(new InviteUser($invite));

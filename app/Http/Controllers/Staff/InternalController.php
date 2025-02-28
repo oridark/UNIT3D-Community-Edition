@@ -19,6 +19,7 @@ namespace App\Http\Controllers\Staff;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Staff\StoreInternalRequest;
 use App\Http\Requests\Staff\UpdateInternalRequest;
+use App\Models\Group;
 use App\Models\Internal;
 use App\Models\User;
 

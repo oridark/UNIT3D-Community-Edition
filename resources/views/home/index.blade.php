@@ -18,6 +18,5 @@
     @livewire('top-users')
     @include('blocks.latest_topics')
     @include('blocks.latest_posts')
-    @include('blocks.latest_comments')
     @include('blocks.online')
 @endsection

@@ -55,6 +55,7 @@
             class="panel__tab panel__tab--full-width"
             role="tab"
             x-bind:class="tab === 'open' && 'panel__tab--active'"
+            x-cloak
             x-on:click="tab = 'open'"
         >
             Open
@@ -63,6 +64,7 @@
             class="panel__tab panel__tab--full-width"
             role="tab"
             x-bind:class="tab === 'closed' && 'panel__tab--active'"
+            x-cloak
             x-on:click="tab = 'closed'"
         >
             Closed

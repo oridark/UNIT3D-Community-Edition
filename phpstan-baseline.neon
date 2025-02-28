@@ -201,6 +201,11 @@ parameters:
 			path: app/Helpers/SystemInformation.php
 
 		-
+			message: "#^Method App\\\\Helpers\\\\TorrentTools\\:\\:getTorrentFiles\\(\\) should return array\\<int, array\\{name\\: string, size\\: int\\}\\> but returns array\\<int\\|string, array\\{name\\: mixed, size\\: mixed\\}\\>\\.$#"
+			count: 1
+			path: app/Helpers/TorrentTools.php
+
+		-
 			message: "#^Method App\\\\Http\\\\Controllers\\\\API\\\\BaseController\\:\\:sendError\\(\\) has parameter \\$code with no type specified\\.$#"
 			count: 1
 			path: app/Http/Controllers/API/BaseController.php
@@ -531,6 +536,11 @@ parameters:
 			path: app/Http/Resources/UserResource.php
 
 		-
+			message: "#^Method App\\\\Http\\\\Resources\\\\UserResource\\:\\:toArray\\(\\) return type with generic interface Illuminate\\\\Contracts\\\\Support\\\\Arrayable does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
 			message: "#^Strict comparison using \\=\\=\\= between float\\|null and 0 will always evaluate to false\\.$#"
 			count: 1
 			path: app/Models/User.php
@@ -574,6 +584,11 @@ parameters:
 			message: "#^Empty array passed to foreach\\.$#"
 			count: 1
 			path: app/Repositories/ChatRepository.php
+
+		-
+			message: "#^Offset 'namesort' does not exist on array\\{0\\?\\: string, 1\\?\\: non\\-empty\\-string, namesort\\?\\: string, 2\\?\\: string, seperator\\?\\: string, 3\\?\\: string, remaining\\?\\: string, 4\\?\\: string, \\.\\.\\.\\}\\.$#"
+			count: 1
+			path: app/Services/Tmdb/Client/Movie.php
 
 		-
 			message: "#^Parameter \\#1 \\$title of static method Illuminate\\\\Support\\\\Str\\:\\:slug\\(\\) expects string, bool\\|string given\\.$#"
@@ -639,16 +654,6 @@ parameters:
 			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
 			count: 1
 			path: database/migrations/2023_07_29_205035_add_torrent_folder_name.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: database/migrations/2024_01_15_151522_update_groups_table.php
-
-		-
-			message: "#^Access to an undefined property object\\:\\:\\$id\\.$#"
-			count: 1
-			path: database/migrations/2024_11_26_170256_add_is_torrent_modo_to_groups_table.php
 
 		-
 			message: "#^Parameter \\#1 \\$root of static method Illuminate\\\\Support\\\\Facades\\\\URL\\:\\:forceRootUrl\\(\\) expects string\\|null, true given\\.$#"

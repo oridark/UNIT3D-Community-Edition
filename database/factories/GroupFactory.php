@@ -16,8 +16,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Group;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Group;
 
 /** @extends Factory<Group> */
 class GroupFactory extends Factory
@@ -46,7 +46,6 @@ class GroupFactory extends Factory
             'is_owner'         => false,
             'is_admin'         => false,
             'is_modo'          => false,
-            'is_torrent_modo'  => false,
             'is_editor'        => false,
             'is_trusted'       => $this->faker->boolean(),
             'is_immune'        => $this->faker->boolean(),
@@ -62,14 +61,5 @@ class GroupFactory extends Factory
             'autogroup'        => $this->faker->boolean(),
             'system_required'  => false,
         ];
-    }
-
-    public function owner(): GroupFactory
-    {
-        return $this->state(fn (array $attributes) => [
-            'is_owner' => true,
-            'is_admin' => true,
-            'is_modo'  => true,
-        ]);
     }
 }
