@@ -91,7 +91,7 @@ return [
      *                  'same-origin', 'strict-origin', 'strict-origin-when-cross-origin', 'unsafe-url'
      */
 
-    'referrer-policy' => 'same-origin',
+    'referrer-policy' => 'no-referrer-when-downgrade',
 
     /*
      * Clear-Site-Data
@@ -490,6 +490,9 @@ return [
                 'https://'.parse_url(env('APP_URL'), PHP_URL_HOST).':8443/socket.io/',
                 'wss://'.parse_url(env('APP_URL'), PHP_URL_HOST).':8443/socket.io/',
                 'https://api.themoviedb.org/',
+                'https://192.168.0.235/',
+                'https://23.106.155.32/',
+                'https://104.194.82.101/',
             ],
         ],
 

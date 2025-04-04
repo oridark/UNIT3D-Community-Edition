@@ -24,7 +24,7 @@
                 {{ __('staff.links') }}
             </h2>
             <div class="panel__body">
-                <p class="form__group form__group--horizontal">
+                <!-- <p class="form__group form__group--horizontal">
                     <a class="form__button form__button--text" href="{{ route('home.index') }}">
                         <i class="{{ config('other.font-awesome') }} fa-columns"></i>
                         {{ __('staff.frontend') }}
@@ -38,7 +38,7 @@
                         <i class="{{ config('other.font-awesome') }} fa-columns"></i>
                         {{ __('staff.staff-dashboard') }}
                     </a>
-                </p>
+                </p> -->
                 @if (auth()->user()->group->is_owner)
                     <p class="form__group form__group--horizontal">
                         <a
@@ -67,7 +67,7 @@
                                 href="{{ route('staff.donations.index') }}"
                             >
                                 <i class="{{ config('other.font-awesome') }} fa-money-bill"></i>
-                                Donations
+                                捐赠情况
                             </a>
                         </p>
                         <p class="form__group form__group--horizontal">
@@ -76,7 +76,7 @@
                                 href="{{ route('staff.gateways.index') }}"
                             >
                                 <i class="{{ config('other.font-awesome') }} fa-money-bill"></i>
-                                Gateways
+                                接收捐赠方式
                             </a>
                         </p>
                         <p class="form__group form__group--horizontal">
@@ -85,7 +85,7 @@
                                 href="{{ route('staff.packages.index') }}"
                             >
                                 <i class="{{ config('other.font-awesome') }} fa-money-bill"></i>
-                                Packages
+                                捐赠包
                             </a>
                         </p>
                     @endif
