@@ -270,7 +270,7 @@
                             class="{{ $percentage < 100 ? 'fa-fade' : '' }}"
                             style="color: lightcoral"
                         >
-                            捐赠
+                            Donate
                         </span>
                         <div class="progress" style="background-color: slategray">
                             <div
@@ -293,15 +293,15 @@
                     <li>
                         <a href="{{ route('donations.index') }}">
                             <i class="fas fa-display-chart-up-circle-dollar"></i>
-                            捐赠 {{ config('other.title') }} ({{ $percentage ?? 0 }}%)
+                            Support {{ config('other.title') }} ({{ $percentage ?? 0 }}%)
                         </a>
                     </li>
-                    <!-- <li>
+                    <li>
                         <a href="https://square.link/u/VjB1CNfm" target="_blank">
                             <i class="fas fa-handshake"></i>
                             Support UNIT3D
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </li>
         @endif

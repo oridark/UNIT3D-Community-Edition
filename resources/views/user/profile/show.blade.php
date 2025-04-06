@@ -27,7 +27,7 @@
     @section('main')
         <section class="panelV2">
             <header class="panel__header">
-                <h2 class="panel__heading">{{ __('user.user') }}{{ __('user.information') }}</h2>
+                <h2 class="panel__heading">{{ __('user.user') }} {{ __('user.information') }}</h2>
                 <div class="panel__actions">
                     @if (auth()->user()->is($user))
                         <div class="panel__action">
@@ -182,7 +182,7 @@
                             alt="{{ $achievement->details->name }}"
                         />
                     @empty
-                        无
+                        No recent achievements.
                     @endforelse
                 </div>
             </section>
@@ -237,7 +237,7 @@
                             />
                         </a>
                     @empty
-                        无
+                        No recent followers
                     @endforelse
                 </div>
             </section>
@@ -324,7 +324,7 @@
                                     <td
                                         colspan="{{ \config('announce.connectable_check') === true ? 7 : 6 }}"
                                     >
-                                        无
+                                        No Clients
                                     </td>
                                 </tr>
                             @endforelse
@@ -334,9 +334,10 @@
                                 <td
                                     colspan="{{ 5 + (int) auth()->user()->group->is_modo + (int) config('announce.connectable_check') }}"
                                 >
-                                    如果此处的客户端ip并不是你实际使用的，请
+                                    If you don't recognize a torrent client or IP address in the
+                                    list, please
                                     <a href="{{ route('tickets.index') }}">
-                                        联系管理
+                                        create a helpdesk ticket
                                     </a>
                                 </td>
                             </tr>
@@ -591,10 +592,10 @@
     @section('sidebar')
         @if (auth()->user()->group->is_modo ||auth()->user()->is($user))
             <section class="panelV2">
-                <h2 class="panel__heading">捐赠</h2>
+                <h2 class="panel__heading">Donations</h2>
                 <dl class="key-value">
                     <div class="key-value__group">
-                        <dt>捐赠期内</dt>
+                        <dt>Active Donor</dt>
                         <dd>
                             @if ($user->is_donor)
                                 <i
@@ -608,7 +609,7 @@
                         </dd>
                     </div>
                     <div class="key-value__group">
-                        <dt>永V</dt>
+                        <dt>Lifetime Donor</dt>
                         <dd>
                             @if ($user->is_lifetime)
                                 <i
@@ -622,19 +623,19 @@
                         </dd>
                     </div>
                     <div class="key-value__group">
-                        <dt>最近一次的捐赠数</dt>
+                        <dt>Latest Donation Amount</dt>
                         <dd>
                             {{ $donation->package->cost ?? 'N/A' }}
                         </dd>
                     </div>
                     <div class="key-value__group">
-                        <dt>最近一次捐赠时间</dt>
+                        <dt>Latest Donation Date</dt>
                         <dd>
                             {{ $donation->starts_at ?? 'N/A' }}
                         </dd>
                     </div>
                     <div class="key-value__group">
-                        <dt>捐赠失效时间</dt>
+                        <dt>Donation Expire Date</dt>
                         <dd>
                             @if ($user->is_lifetime)
                                 Lifetime Donor
@@ -666,7 +667,7 @@
 
         @if (auth()->user()->isAllowed($user, 'profile', 'show_profile_torrent_seed'))
             <section class="panelV2">
-                <h2 class="panel__heading">做种 {{ __('user.statistics') }}</h2>
+                <h2 class="panel__heading">Seed {{ __('user.statistics') }}</h2>
                 <dl class="key-value">
                     <div class="key-value__group">
                         <dt>
@@ -712,7 +713,7 @@
         @if (auth()->user()->isAllowed($user, 'profile', 'show_profile_torrent_count'))
             @if (auth()->user()->is($user) || auth()->user()->group->is_modo)
                 <section class="panelV2">
-                    <h2 class="panel__heading">种子统计</h2>
+                    <h2 class="panel__heading">Torrent Count</h2>
                     <dl class="key-value">
                         <div class="key-value__group">
                             <dt>
@@ -775,7 +776,7 @@
                 </section>
             @else
                 <section class="panelV2">
-                    <h2 class="panel__heading">种子统计</h2>
+                    <h2 class="panel__heading">Torrent Count</h2>
                     <dl class="key-value">
                         <div class="key-value__group">
                             <dt>
@@ -810,7 +811,7 @@
 
         @if (auth()->user()->isAllowed($user, 'profile', 'show_profile_torrent_ratio'))
             <section class="panelV2">
-                <h2 class="panel__heading">流量 {{ __('torrent.statistics') }}</h2>
+                <h2 class="panel__heading">Traffic {{ __('torrent.statistics') }}</h2>
                 <dl class="key-value">
                     <div class="key-value__group">
                         <dt>{{ __('common.ratio') }}</dt>

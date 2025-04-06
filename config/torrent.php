@@ -34,7 +34,7 @@ return [
     |
     */
 
-    'source' => '电影收藏馆',
+    'source' => 'UNIT3D',
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'created_by'        => 'Edited by M2C',
+    'created_by'        => 'Edited by UNIT3D',
     'created_by_append' => true,
 
     /*
@@ -57,7 +57,7 @@ return [
     |
     */
 
-    'comment' => 'This torrent was downloaded from MovieCollections',
+    'comment' => 'This torrent was downloaded from UNIT3D',
 
     /*
     |--------------------------------------------------------------------------

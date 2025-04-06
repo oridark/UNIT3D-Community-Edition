@@ -72,7 +72,7 @@
             x-bind:class="tab === 'automated' && 'panel__tab--active'"
             x-on:click="tab = 'automated'"
         >
-            自动 ({{ $automatedWarningsCount ?? 0 }})
+            Automated ({{ $automatedWarningsCount ?? 0 }})
         </li>
         <li
             class="panel__tab"
@@ -80,7 +80,7 @@
             x-bind:class="tab === 'manual' && 'panel__tab--active'"
             x-on:click="tab = 'manual'"
         >
-            人工 ({{ $manualWarningsCount ?? 0 }})
+            Manual ({{ $manualWarningsCount ?? 0 }})
         </li>
         <li
             class="panel__tab"
@@ -88,7 +88,7 @@
             x-bind:class="tab === 'deleted' && 'panel__tab--active'"
             x-on:click="tab = 'deleted'"
         >
-            已删除 ({{ $deletedWarningsCount ?? 0 }})
+            Soft Deleted ({{ $deletedWarningsCount ?? 0 }})
         </li>
     </menu>
     <div class="data-table-wrapper">

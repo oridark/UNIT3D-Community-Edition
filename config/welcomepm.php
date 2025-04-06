@@ -23,7 +23,7 @@ return [
     |
     */
 
-    'subject' => '欢迎来到电影收藏馆',
+    'subject' => 'Welcome to UNIT3D',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,5 +34,7 @@ return [
     |
     */
 
-    'message' => '欢迎来到 [b]电影收藏馆[/b]。',
+    'message' => 'Welcome To [b]UNIT3D[/b].
+
+    - UNIT3D :space_invader:',
 ];

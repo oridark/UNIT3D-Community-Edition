@@ -9,12 +9,12 @@
 @endsection
 
 @section('breadcrumbs')
-    <li class="breadcrumb--active">捐赠</li>
+    <li class="breadcrumb--active">Donate</li>
 @endsection
 
 @section('content')
     <section x-data class="panelV2">
-        <h2 class="panel__heading">捐赠 {{ config('other.title') }}</h2>
+        <h2 class="panel__heading">Support {{ config('other.title') }}</h2>
         <div class="panel__body">
             <p>{{ config('donation.description') }}</p>
             <div class="donation-packages">
@@ -50,18 +50,18 @@
                                         <li>Custom User Icon</li>
                                     @endif
 
-                                    <li>全站Free</li>
-                                    <li>免疫HR (请勿滥用)</li>
+                                    <li>Global Freeleech</li>
+                                    <li>Immunity To Automated Warnings (Don't Abuse)</li>
                                     <li
                                         style="
                                             background-image: url(/img/sparkels.gif);
                                             width: auto;
                                         "
                                     >
-                                        彩虹ID
+                                        Sparkle Effect On Username
                                     </li>
                                     <li>
-                                        黄星
+                                        Donor Star By Username
                                         @if ($package->donor_value === null)
                                             <i
                                                 id="lifeline"
@@ -73,12 +73,13 @@
                                         @endif
                                     </li>
                                     <li>
-                                        {{ config('other.title') }}的诚信感谢与祝福
+                                        Warm Fuzzy Feeling By Supporting
+                                        {{ config('other.title') }}
                                     </li>
                                     @if ($package->upload_value !== null)
                                         <li>
                                             {{ App\Helpers\StringHelper::formatBytes($package->upload_value) }}
-                                            上传
+                                            Upload Credit
                                         </li>
                                     @endif
 
@@ -89,7 +90,7 @@
                                     @endif
 
                                     @if ($package->invite_value !== null)
-                                        <li>{{ $package->invite_value }} 个邀请</li>
+                                        <li>{{ $package->invite_value }} Invites</li>
                                     @endif
                                 </ol>
                             </div>
@@ -100,7 +101,7 @@
                                         x-on:click.stop="$refs.dialog{{ $package->id }}.showModal()"
                                     >
                                         <i class="fas fa-handshake"></i>
-                                        捐赠
+                                        Donate
                                     </button>
                                 </p>
                             </div>
@@ -121,7 +122,7 @@
                 >
                     @csrf
                     <span class="text-success text-center">
-                        按照以下步骤进行捐赠::
+                        To make a donation you must complete the following steps:
                     </span>
                     <div class="form__group--horizontal">
                         @foreach ($gateways->sortBy('position') as $gateway)
@@ -178,11 +179,11 @@
                         </p>
                     </div>
                     <span class="text-warning">
-                        * 有些途径的转账需要较长时间去核对，如果两天内没有结果请联系我们.
+                        * Transactions may take up to 48 hours to process.
                     </span>
                     <p class="form__group">
                         <input type="hidden" name="package_id" value="{{ $package->id }}" />
-                        <button class="form__button form__button--filled">确认</button>
+                        <button class="form__button form__button--filled">Donate</button>
                         <button
                             formmethod="dialog"
                             formnovalidate
